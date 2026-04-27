@@ -1,435 +1,300 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Send, Linkedin, Twitter, Instagram, Mail } from 'lucide-react';
+import { Linkedin, Send } from 'lucide-react';
 
-/* ─── ROBOT MOOD TYPE ─── */
-type RobotMood = 'idle' | 'happy1' | 'happy2' | 'clapping';
-
-/* ─────────────────────────────────────────────────
-   PEEPING ROBOT COMPONENT
-   The robot peeks from an edge of the screen.
-   "side" controls which edge it enters from.
-   The robot always FACES INWARD (toward the viewer).
-   Left robot: body is to the left, it leans right to peek.
-   Right robot: mirrored.
-─────────────────────────────────────────────────── */
-const PeepingRobot = ({ side, mood, visible }: {
-  side: 'left' | 'right';
-  mood: RobotMood;
-  visible: boolean;
-}) => {
-  const isClapping = mood === 'clapping';
-  const isHappy2   = mood === 'happy2' || isClapping;
-  const isHappy1   = mood === 'happy1' || isHappy2;
-
-  /* Smile path on visor — gets bigger with each state */
-  const smilePath = isClapping
-    ? 'M -22 2 Q 0 28 22 2'    // huge grin
-    : isHappy2
-    ? 'M -20 2 Q 0 22 20 2'    // big smile
-    : isHappy1
-    ? 'M -16 2 Q 0 16 16 2'    // medium smile
-    : 'M -16 2 L 16 2';        // flat
-
-  /* Eye glow intensity */
-  const eyeGlow = isHappy2 ? '#FFE066' : '#00E5FF';
-
-  /* Clapping arm angles — right arm swings up on clap */
-  const rightArmClap = isClapping ? 'rotate(-60)' : 'rotate(0)';
-  const leftArmClap  = isClapping ? 'rotate(60)'  : 'rotate(0)';
-
-  /* Bounce scale on clapping */
-  const bounceScale = isClapping ? 1.08 : 1;
-
-  /* The peek offset: when visible the robot shows its head+shoulder only.
-     The container is overflow-hidden; translateX shifts the robot body
-     in/out so only the correct amount is visible. */
-
-  // Left robot: positioned so body is mostly off-screen LEFT. Peek = slide RIGHT.
-  // Right robot: positioned so body is mostly off-screen RIGHT. Peek = slide LEFT.
-  const hiddenX  = side === 'left' ? '-88%' : '88%';
-  const visibleX = side === 'left' ? '-28%'  : '28%';   // leans in, head visible
-
+const LeftRobot = ({ isPeeping }: { isPeeping: boolean }) => {
+  const [isLooking, setIsLooking] = useState(false);
   return (
-    <div
-      className="absolute z-40 pointer-events-none"
-      style={{
-        width: 'clamp(200px, 26vw, 400px)',
-        height: 'clamp(340px, 45vw, 640px)',
-        bottom: '0',
-        [side]: 0,
-        transform: `translateX(${visible ? visibleX : hiddenX}) scale(${bounceScale})`,
-        transition: 'transform 0.22s cubic-bezier(0.16,1,0.3,1)',
-      }}
+    <svg 
+      viewBox="0 0 120 200" 
+      className={`absolute left-0 top-1/2 -translate-y-1/2 w-24 md:w-32 lg:w-40 xl:w-48 transition-transform duration-700 ease-out z-[40] ${isPeeping ? 'translate-x-[0%]' : '-translate-x-full'}`}
+      onMouseEnter={() => setIsLooking(true)}
+      onMouseLeave={() => setIsLooking(false)}
+      style={{ cursor: 'pointer' }}
     >
-      <svg
-        viewBox="0 0 310 530"
-        className="w-full h-full drop-shadow-2xl"
-        style={{ transform: side === 'right' ? 'scaleX(-1)' : 'none' }}
-      >
-        <style>{`
-          @keyframes robotBounce {
-            0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)}
-          }
-          @keyframes antennaGlow {
-            0%,100%{opacity:1} 50%{opacity:0.3}
-          }
-        `}</style>
+      {/* Body peeking from left */}
+      <path d="M -20 40 Q 80 40 100 200 L -20 200 Z" fill="#EAEAEA" stroke="#111" strokeWidth="6" />
+      <path d="M -20 180 Q 70 180 80 200 L -20 200 Z" fill="#D0D0D0" />
+      
+      {/* Big Eye */}
+      <circle cx="50" cy="110" r="28" fill="#FFF" stroke="#111" strokeWidth="5" />
+      {/* Pupil looking towards form (cx=65) or at us (cx=50) */}
+      <circle cx={isLooking ? 50 : 65} cy="110" r="10" fill="#111" style={{ transition: 'cx 0.3s ease' }} />
+      {/* Highlight on pupil */}
+      <circle cx={isLooking ? 53 : 68} cy="106" r="3" fill="#FFF" style={{ transition: 'cx 0.3s ease' }} />
+      
+      {/* Antenna */}
+      <path d="M 10 40 L 40 10" stroke="#111" strokeWidth="5" strokeLinecap="round" />
+      <circle cx="45" cy="10" r="8" fill="#F48B29" stroke="#111" strokeWidth="4" />
+      <circle cx="47" cy="8" r="2" fill="#FFF" />
 
-        {/* Whole body group — bounces when clapping */}
-        <g style={{
-          animation: isClapping ? 'robotBounce 0.35s ease-in-out infinite' : 'none',
-          transformOrigin: '155px 260px',
-        }}>
+      {/* Joints/Panel */}
+      <line x1="20" y1="160" x2="60" y2="160" stroke="#111" strokeWidth="4" strokeLinecap="round" />
+      <line x1="10" y1="175" x2="50" y2="175" stroke="#111" strokeWidth="4" strokeLinecap="round" />
+    </svg>
+  );
+};
 
-          {/* ── LEGS ── */}
-          <rect x="108" y="380" width="38" height="130" rx="16" fill="#1A1A1A" stroke="#111" strokeWidth="5" />
-          <rect x="164" y="380" width="38" height="130" rx="16" fill="#1A1A1A" stroke="#111" strokeWidth="5" />
-          <ellipse cx="127"  cy="508" rx="30" ry="12" fill="#111" stroke="#000" strokeWidth="3" />
-          <ellipse cx="183"  cy="508" rx="30" ry="12" fill="#111" stroke="#000" strokeWidth="3" />
-          {/* Leg accent rings */}
-          <rect x="108" y="418" width="38" height="9" rx="4" fill="#FFE066" />
-          <rect x="164" y="418" width="38" height="9" rx="4" fill="#FFE066" />
+const RightRobot = ({ isPeeping }: { isPeeping: boolean }) => {
+  const [isLooking, setIsLooking] = useState(false);
+  return (
+    <svg 
+      viewBox="0 0 120 200" 
+      className={`absolute right-0 top-1/2 -translate-y-1/2 w-24 md:w-32 lg:w-40 xl:w-48 transition-transform duration-700 ease-out z-[40] ${isPeeping ? 'translate-x-[0%]' : 'translate-x-full'}`} 
+      style={{ transform: isPeeping ? 'scaleX(-1) translateY(-50%) translate(0, 0)' : 'scaleX(-1) translateY(-50%) translate(-100%, 0)', cursor: 'pointer' }}
+      onMouseEnter={() => setIsLooking(true)}
+      onMouseLeave={() => setIsLooking(false)}
+    >
+      <path d="M -20 40 Q 80 40 100 200 L -20 200 Z" fill="#EAEAEA" stroke="#111" strokeWidth="6" />
+      <path d="M -20 180 Q 70 180 80 200 L -20 200 Z" fill="#D0D0D0" />
+      
+      <circle cx="50" cy="110" r="28" fill="#FFF" stroke="#111" strokeWidth="5" />
+      <circle cx={isLooking ? 50 : 65} cy="110" r="10" fill="#111" style={{ transition: 'cx 0.3s ease' }} />
+      <circle cx={isLooking ? 53 : 68} cy="106" r="3" fill="#FFF" style={{ transition: 'cx 0.3s ease' }} />
+      
+      <path d="M 10 40 L 40 10" stroke="#111" strokeWidth="5" strokeLinecap="round" />
+      <circle cx="45" cy="10" r="8" fill="#4FC3F7" stroke="#111" strokeWidth="4" />
+      <circle cx="47" cy="8" r="2" fill="#FFF" />
+      
+      <line x1="20" y1="160" x2="60" y2="160" stroke="#111" strokeWidth="4" strokeLinecap="round" />
+      <line x1="10" y1="175" x2="50" y2="175" stroke="#111" strokeWidth="4" strokeLinecap="round" />
+    </svg>
+  );
+};
 
-          {/* ── BODY / TORSO ── */}
-          <rect x="75" y="220" width="160" height="170" rx="36" fill="#F8F4EC" stroke="#111" strokeWidth="8" />
-          {/* Chest LCD panel */}
-          <rect x="96" y="238" width="118" height="80" rx="14" fill="#111" />
-          <rect x="107" y="250" width="45" height="9" rx="4" fill={eyeGlow} opacity="0.9" />
-          <rect x="107" y="268" width="68" height="5" rx="2" fill="#fff" opacity="0.5" />
-          <rect x="107" y="280" width="50" height="5" rx="2" fill="#fff" opacity="0.5" />
-          <circle cx="185" cy="278" r="12" fill="none" stroke={eyeGlow} strokeWidth="3" />
-          <circle cx="185" cy="278" r="5"  fill={eyeGlow} />
-          {/* Belly bolt */}
-          <circle cx="155" cy="356" r="11" fill="#333" stroke="#111" strokeWidth="3" />
-          <circle cx="155" cy="356" r="4"  fill="#555" />
+const ClapperboardFrame = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="relative w-full max-w-[600px] mx-auto z-30 pt-16">
+      {/* Clapperboard Stick (Top) */}
+      <div className="absolute top-0 left-0 right-0 h-[70px] origin-bottom-left transition-transform duration-300 hover:-rotate-6 z-20 flex" style={{ perspective: 1000 }}>
+        <div className="w-full h-full bg-[#111] rounded-t-xl border-4 border-[#222] shadow-[0_-8px_20px_rgba(0,0,0,0.15)] overflow-hidden flex relative">
+          {/* Chevron stripes */}
+          <svg width="100%" height="100%" preserveAspectRatio="none">
+            <defs>
+              <pattern id="chevrons" x="0" y="0" width="80" height="100" patternUnits="userSpaceOnUse" patternTransform="skewX(-30)">
+                <rect x="0" y="0" width="40" height="100" fill="#FFF" />
+                <rect x="40" y="0" width="40" height="100" fill="#111" />
+              </pattern>
+            </defs>
+            <rect x="0" y="0" width="100%" height="100%" fill="url(#chevrons)" />
+          </svg>
+          {/* Screw / Hinge */}
+          <div className="absolute top-1/2 left-4 w-6 h-6 rounded-full bg-[#555] border-4 border-[#222] transform -translate-y-1/2 z-30" />
+        </div>
+      </div>
 
-          {/* ── LEFT ARM (our left = robot's left, pointing INWARD toward viewer) ── */}
-          {/* When clapping, this swings up toward midline */}
-          <g style={{ transformOrigin: '80px 250px', transform: leftArmClap, transition: 'transform 0.15s ease' }}>
-            <path d="M 80 250 Q 30 290 25 350" fill="none" stroke="#F8F4EC" strokeWidth="30" strokeLinecap="round" />
-            <path d="M 80 250 Q 30 290 25 350" fill="none" stroke="#111" strokeWidth="36" strokeLinecap="round" opacity="0.12" />
-            <circle cx="25" cy="362" r="22" fill="#FFE066" stroke="#111" strokeWidth="5" />
-          </g>
+      {/* Clapperboard Body */}
+      <div className="relative bg-[#111] rounded-b-3xl border-4 border-[#222] border-t-0 p-8 md:p-12 shadow-[0_30px_60px_rgba(0,0,0,0.2)] overflow-hidden mt-[-2px]">
+        {/* Grain overlay */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
+        
+        {/* Clapperboard text headers */}
+        <div className="flex justify-between items-end border-b-2 border-gray-800 pb-6 mb-10">
+           <div>
+             <span className="font-mono text-[11px] text-gray-500 tracking-[0.2em] block mb-2">PROD.</span>
+             <h3 className="font-heading text-white text-[clamp(24px,4vw,36px)] leading-none tracking-wide text-shadow-sm">MAIL US</h3>
+           </div>
+           <div className="text-right">
+             <span className="font-mono text-[11px] text-gray-500 tracking-[0.2em] block mb-2">SCENE.</span>
+             <span className="font-mono text-white text-3xl font-bold">01</span>
+           </div>
+        </div>
 
-          {/* ── RIGHT ARM (points toward clapperboard — the "peeking" side) ── */}
-          {/* When clapping, swings up to meet left arm */}
-          <g style={{ transformOrigin: '235px 250px', transform: rightArmClap, transition: 'transform 0.15s ease' }}>
-            <path d="M 235 250 Q 285 300 285 360" fill="none" stroke="#F8F4EC" strokeWidth="30" strokeLinecap="round" />
-            <path d="M 235 235 Q 285 300 285 360" fill="none" stroke="#111" strokeWidth="36" strokeLinecap="round" opacity="0.12" />
-            <circle cx="285" cy="372" r="22" fill="#FFE066" stroke="#111" strokeWidth="5" />
-          </g>
-
-          {/* ── NECK ── */}
-          <rect x="136" y="168" width="38" height="58" rx="10" fill="#DDD" stroke="#111" strokeWidth="5" />
-
-          {/* ── HEAD with curious TILT toward clapperboard ── */}
-          {/* Left robot tilts right (positive), right robot appears to tilt left due to scaleX flip */}
-          <g style={{ transformOrigin: '155px 120px', transform: 'rotate(12deg)', transition: 'transform 0.3s ease' }}>
-          <rect x="80"  y="68"  width="150" height="106" rx="32" fill="#F8F4EC" stroke="#111" strokeWidth="8" />
-
-          {/* VR Visor */}
-          <rect x="75" y="96" width="160" height="56" rx="18" fill="#111" />
-
-          {/* Eyes — glow colour changes with mood */}
-          <circle cx="122" cy="124" r="16" fill={eyeGlow} filter="url(#eyeBlur)" />
-          <circle cx="122" cy="124" r="7"  fill="#fff" />
-          <circle cx="188" cy="124" r="16" fill={eyeGlow} filter="url(#eyeBlur)" />
-          <circle cx="188" cy="124" r="7"  fill="#fff" />
-
-          {/* Animated shine on eyes when happy */}
-          {isHappy1 && (
-            <>
-              <circle cx="128" cy="118" r="4" fill="white" opacity="0.7" />
-              <circle cx="194" cy="118" r="4" fill="white" opacity="0.7" />
-            </>
-          )}
-
-          {/* Smile / expression */}
-          <g transform="translate(155, 152)">
-            <path
-              d={smilePath}
-              fill="none"
-              stroke={eyeGlow}
-              strokeWidth="5"
-              strokeLinecap="round"
-              style={{ transition: 'd 0.25s ease' }}
-            />
-          </g>
-
-          {/* Headphones arc */}
-          <path d="M 78 118 C 78 42 232 42 232 118" fill="none" stroke="#FFE066" strokeWidth="14" strokeLinecap="round" />
-          <rect x="62"  y="103" width="22" height="56" rx="10" fill="#111" stroke="#333" strokeWidth="5" />
-          <rect x="226" y="103" width="22" height="56" rx="10" fill="#111" stroke="#333" strokeWidth="5" />
-
-          {/* Antenna */}
-          <line x1="210" y1="68"  x2="236" y2="22" stroke="#555" strokeWidth="7" strokeLinecap="round" />
-          <circle
-            cx="238" cy="18" r="10"
-            fill="#FF4B6E"
-            style={{ animation: isHappy1 ? 'antennaGlow 0.5s infinite' : 'antennaGlow 2s infinite' }}
-          />
-          </g> {/* end head tilt group */}
-        </g>
-
-        <defs>
-          <filter id="eyeBlur" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
-          </filter>
-        </defs>
-      </svg>
+        {/* The form injected here */}
+        <div className="relative z-10 w-full">
+          {children}
+        </div>
+      </div>
     </div>
   );
 };
 
-
-/* ─── CUSTOM SVG: Cinematic Clapperboard & Film Reels ─── */
-const SetPieceSVG = ({ isSubmitting }: { isSubmitting: boolean }) => (
-  <svg viewBox="0 0 1000 800" className="w-full h-full overflow-visible pointer-events-none" preserveAspectRatio="xMidYMid meet">
-    <style>{`
-      @keyframes floatFilm { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-      @keyframes glowPulse { 0%,100%{filter:drop-shadow(0 0 20px #FF4B6E)} 50%{filter:drop-shadow(0 0 40px #FF4B6E)} }
-    `}</style>
-    <ellipse cx="500" cy="730" rx="350" ry="40" fill="#600000" opacity="0.6" filter="blur(20px)" />
-
-    {/* Film Reels */}
-    <g style={{ animation: 'floatFilm 7s ease-in-out infinite' }}>
-      <g transform="translate(180, 600) rotate(-15)">
-        <circle cx="0" cy="0" r="120" fill="#111" stroke="#333" strokeWidth="8" />
-        <circle cx="0" cy="0" r="20" fill="#FFE066" />
-        {[0,60,120,180,240,300].map(a => (
-          <g key={a} transform={`rotate(${a})`}>
-            <path d="M 30 -20 L 90 -40 A 90 90 0 0 1 90 40 L 30 20 Z" fill="#1A1A1A" stroke="#333" strokeWidth="3" />
-          </g>
-        ))}
-      </g>
-      <g transform="translate(820, 650) rotate(25)">
-        <circle cx="0" cy="0" r="100" fill="#0A0A0A" stroke="#222" strokeWidth="6" />
-        <circle cx="0" cy="0" r="15" fill="#00E5FF" />
-        {[0,72,144,216,288].map(a => (
-          <g key={a} transform={`rotate(${a})`}>
-            <path d="M 25 -15 L 75 -30 A 75 75 0 0 1 75 30 L 25 15 Z" fill="#111" stroke="#222" strokeWidth="2" />
-          </g>
-        ))}
-      </g>
-      <path d="M 180 480 C 300 300, 700 800, 820 550" fill="none" stroke="#050505" strokeWidth="30" strokeLinecap="round" />
-      <path d="M 180 480 C 300 300, 700 800, 820 550" fill="none" stroke="#222" strokeWidth="30" strokeDasharray="10 10" />
-    </g>
-
-    {/* Clapperboard */}
-    <g transform="translate(500, 450)">
-      <rect x="-280" y="-180" width="560" height="380" rx="16" fill="#111" stroke="#000" strokeWidth="8" />
-      <rect x="-260" y="-160" width="520" height="340" fill="none" stroke="#333" strokeWidth="4" rx="8" />
-      <g fill="#444" fontSize="20" fontFamily="monospace" fontWeight="bold" letterSpacing="4">
-        <text x="-240" y="-120">PROD. NO.</text>
-        <line x1="-120" y1="-120" x2="240" y2="-120" stroke="#333" strokeWidth="2" />
-        <text x="-240" y="-80">SCENE</text>
-        <text x="-120" y="-80">TAKE</text>
-        <text x="80"   y="-80">SOUND</text>
-      </g>
-      {/* Lower stick */}
-      <rect x="-280" y="-220" width="560" height="40" rx="8" fill="#111" stroke="#000" strokeWidth="6" />
-      <g fill="#F8F4EC">
-        {[-260,-180,-100,-20,60,140,220].map(x => (
-          <polygon key={x} points={`${x},-220 ${x+30},-220 ${x+10},-180 ${x-20},-180`} />
-        ))}
-      </g>
-      {/* Upper stick (snaps down on submit) */}
-      <g style={{
-        transformOrigin: '-260px -200px',
-        transform: isSubmitting ? 'rotate(0deg)' : 'rotate(-15deg)',
-        transition: 'transform 0.2s cubic-bezier(0.175,0.885,0.32,1.275)',
-      }}>
-        <rect x="-280" y="-260" width="560" height="40" rx="8" fill="#FFE066" stroke="#000" strokeWidth="6" />
-        <g fill="#111">
-          {[-180,-100,-20,60,140,220].map(x => (
-            <polygon key={x} points={`${x},-260 ${x+30},-260 ${x+10},-220 ${x-20},-220`} />
-          ))}
-        </g>
-        <circle cx="-260" cy="-240" r="12" fill="#333" stroke="#000" strokeWidth="4" />
-        <circle cx="-260" cy="-240" r="4"  fill="#111" />
-      </g>
-    </g>
-
-    <g style={{ animation: 'glowPulse 3s infinite' }}>
-      <path d="M 250 200 Q 255 180 260 200 Q 280 205 260 210 Q 255 230 250 210 Q 230 205 250 200 Z" fill="#FFE066" />
-      <path d="M 800 350 Q 805 340 810 350 Q 820 355 810 360 Q 805 370 800 360 Q 790 355 800 350 Z" fill="#00E5FF" />
-      <circle cx="750" cy="250" r="4" fill="#FF4B6E" />
-    </g>
-  </svg>
-);
-
-
-/* ─── MAIN COMPONENT ─── */
-const CollaborateSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView   = useInView(sectionRef, { once: true, margin: '-10%' });
-
-  const [curtainVisible, setCurtainVisible] = useState(false);
-  const [isSubmitting,   setIsSubmitting]   = useState(false);
-
-  /* Robot states */
-  const [robotVisible, setRobotVisible] = useState(false);
-  const [nameValue,    setNameValue]    = useState('');
-  const [emailValue,   setEmailValue]   = useState('');
-  const [mood, setMood] = useState<RobotMood>('idle');
-
-  /* Derive mood from form state */
-  useEffect(() => {
-    if (isSubmitting) { setMood('clapping'); return; }
-    if (nameValue.length > 0 && emailValue.length > 0) { setMood('happy2'); return; }
-    if (nameValue.length > 0 || emailValue.length > 0) { setMood('happy1'); return; }
-    setMood('idle');
-  }, [nameValue, emailValue, isSubmitting]);
-
-  useEffect(() => {
-    if (isInView) setTimeout(() => setCurtainVisible(true), 200);
-  }, [isInView]);
+const ContactForm = () => {
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setStatus('sending');
     setTimeout(() => {
-      setIsSubmitting(false);
-      window.open('https://calendly.com/operacreatives', '_blank', 'noopener,noreferrer');
+      setStatus('sent');
+      setFormData({ name: '', email: '', phone: '' });
+      setTimeout(() => setStatus('idle'), 3000);
     }, 1200);
   };
+
+  const inputBase: React.CSSProperties = {
+    width: '100%',
+    padding: '16px 20px',
+    borderRadius: 8,
+    border: '2px solid rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    color: '#fff',
+    fontFamily: "'Satoshi', sans-serif",
+    fontSize: 16,
+    outline: 'none',
+    transition: 'border-color 0.2s, background-color 0.2s',
+  };
+  const labelBase: React.CSSProperties = {
+    fontFamily: "'Space Mono', monospace",
+    fontSize: 11,
+    letterSpacing: '0.15em',
+    textTransform: 'uppercase' as const,
+    color: 'rgba(255,255,255,0.6)',
+    marginBottom: 8,
+    display: 'block',
+  };
+  const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.style.borderColor = '#F48B29';
+    e.target.style.backgroundColor = 'rgba(0,0,0,0.8)';
+  };
+  const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.style.borderColor = 'rgba(255,255,255,0.1)';
+    e.target.style.backgroundColor = 'rgba(0,0,0,0.5)';
+  };
+
+  return (
+    <form 
+      onSubmit={handleSubmit} 
+      className="flex flex-col gap-6 w-full"
+    >
+      <div>
+        <label style={labelBase}>Name *</label>
+        <input type="text" required value={formData.name}
+          onChange={e => setFormData(f => ({ ...f, name: e.target.value }))}
+          placeholder="Your name" style={inputBase} onFocus={onFocus} onBlur={onBlur} />
+      </div>
+      <div>
+        <label style={labelBase}>Email *</label>
+        <input type="email" required value={formData.email}
+          onChange={e => setFormData(f => ({ ...f, email: e.target.value }))}
+          placeholder="you@example.com" style={inputBase} onFocus={onFocus} onBlur={onBlur} />
+      </div>
+      <div>
+        <label style={labelBase}>Phone <span style={{ opacity: 0.5 }}>(optional)</span></label>
+        <input type="tel" value={formData.phone}
+          onChange={e => setFormData(f => ({ ...f, phone: e.target.value }))}
+          placeholder="+1 234 567 8900" style={inputBase} onFocus={onFocus} onBlur={onBlur} />
+      </div>
+      
+      <div className="pt-4">
+        <button
+          type="submit"
+          disabled={status === 'sending'}
+          className="btn-3d btn-3d-orange w-full"
+          style={{ width: '100%', padding: '20px 24px', fontSize: '15px' }}
+        >
+          {status === 'sending' ? (
+            <span className="flex items-center justify-center gap-3">
+              <span className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              TRANSMITTING…
+            </span>
+          ) : status === 'sent' ? (
+            '✓ SIGNAL RECEIVED'
+          ) : (
+            <span className="flex items-center justify-center gap-3"><Send size={18} /> SEND</span>
+          )}
+        </button>
+      </div>
+    </form>
+  );
+};
+
+const CollaborateSection = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: '-10%' });
+  const [isFormHovered, setIsFormHovered] = useState(false);
+
+  const socials = [
+    { href: 'https://x.com/aiuncover',                       label: 'X' },
+    { href: 'https://www.linkedin.com/in/kshitijsatbhai/',   label: 'LinkedIn' },
+  ];
 
   return (
     <section
       id="collaborate"
       data-section="5"
-      data-bg="#C0152A"
+      data-bg="#FF0000"
       ref={sectionRef}
-      className="relative flex flex-col items-center pt-24 pb-16 overflow-hidden"
-      style={{ backgroundColor: '#C0152A', color: '#ffffff' }}
+      className="relative overflow-hidden flex flex-col items-center justify-center"
+      style={{
+        backgroundColor: '#D32F2F', /* Deep Red */
+        color: '#FFFFFF',
+        minHeight: '100vh',
+        paddingTop: 100,
+        paddingBottom: 120,
+      }}
     >
-      {/* ── CSS Velvet Curtains ── */}
-      <div
-        className="pointer-events-none absolute top-0 bottom-0 left-0 w-[140px] z-20"
-        style={{
-          background: 'linear-gradient(90deg, #8B0000 0%, #A01020 40%, transparent 100%)',
-          clipPath: 'polygon(0 0, 85% 0, 100% 8%, 85% 92%, 100% 100%, 0 100%)',
-          transform: curtainVisible ? 'translateX(0)' : 'translateX(-60px)',
-          opacity:   curtainVisible ? 1 : 0,
-          transition: 'transform 1s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.8s ease',
-        }}
-      >
-        <div className="absolute top-0 bottom-0 right-[30px] w-[2px]" style={{ background: 'rgba(255,255,255,0.06)' }} />
-      </div>
-      <div
-        className="pointer-events-none absolute top-0 bottom-0 right-0 w-[140px] z-20"
-        style={{
-          background: 'linear-gradient(270deg, #8B0000 0%, #A01020 40%, transparent 100%)',
-          clipPath: 'polygon(15% 0, 100% 0, 100% 100%, 15% 100%, 0% 92%, 15% 8%)',
-          transform: curtainVisible ? 'translateX(0)' : 'translateX(60px)',
-          opacity:   curtainVisible ? 1 : 0,
-          transition: 'transform 1s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.8s ease',
-          transitionDelay: '0.05s',
-        }}
-      >
-        <div className="absolute top-0 bottom-0 left-[30px] w-[2px]" style={{ background: 'rgba(255,255,255,0.06)' }} />
-      </div>
+      {/* Background radial gradient to add center focus */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15)_0%,transparent_70%)] pointer-events-none" />
 
-      {/* ── PEEPING ROBOTS ── */}
-      {/* They sit at the bottom edges of the section.
-          The section has overflow-hidden so their bodies are clipped
-          when they are NOT visible — only their heads poke in. */}
-      <PeepingRobot side="left"  mood={mood} visible={robotVisible} />
-      <PeepingRobot side="right" mood={mood} visible={robotVisible} />
+      {/* Peeping Robots — hidden on mobile to keep form accessible */}
+      <div className="hidden md:block"><LeftRobot isPeeping={isFormHovered} /></div>
+      <div className="hidden md:block"><RightRobot isPeeping={isFormHovered} /></div>
 
-      {/* Intro Typography */}
-      <motion.div
-        className="relative z-30 text-center px-4 max-w-4xl mx-auto mb-6 sm:mb-10"
-        initial={{ opacity: 0, y: -20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: 0.2 }}
-      >
-        <span className="font-mono text-[#FFE066] text-[12px] tracking-[0.3em] font-bold uppercase drop-shadow-md block mb-4">
-          REGISTER A CALL
-        </span>
-        <h2 className="font-heading uppercase text-white drop-shadow-2xl" style={{ fontSize: 'clamp(40px, 8vw, 90px)', lineHeight: 0.9 }}>
-          LET'S <span className="text-[#111]">COLLABORATE</span>
-        </h2>
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 sm:px-12 flex flex-col xl:flex-row items-center justify-center gap-16 xl:gap-24">
         
-        {/* Cinematic Tagline Wrapper */}
-        <div className="flex items-center justify-center gap-3 sm:gap-6 mt-6 sm:mt-10">
-          <div className="h-[1px] w-12 sm:w-24 bg-gradient-to-r from-transparent to-white/30"></div>
-          <p className="font-mono text-white/70 text-[10px] sm:text-[13px] uppercase tracking-[0.25em] text-center">
-            Because every brand deserves a standing ovation.
-          </p>
-          <div className="h-[1px] w-12 sm:w-24 bg-gradient-to-l from-transparent to-white/30"></div>
-        </div>
-      </motion.div>
-
-      {/* ── THE CLAPPERBOARD FORM SET PIECE ── */}
-      <div className="relative w-full max-w-[1000px] aspect-[10/8] flex flex-col items-center justify-center mt-[-30px] sm:mt-[-50px]">
-
-        {/* SVG Art */}
-        <div className="absolute inset-0 z-10 select-none">
-          <SetPieceSVG isSubmitting={isSubmitting} />
-        </div>
-
-        {/* HTML Contact Form — hovering this reveals the robots */}
-        <div
-          className="absolute z-20 w-[46%] h-[35%] top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center"
-          onMouseEnter={() => setRobotVisible(true)}
-          onMouseLeave={() => setRobotVisible(false)}
+        {/* Left Side: Copy & Socials */}
+        <motion.div
+          className="flex flex-col items-center xl:items-start text-center xl:text-left max-w-xl xl:max-w-md"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.22,1,0.36,1] }}
         >
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4 w-full h-full justify-center">
+          <h2
+            className="font-heading tracking-wide"
+            style={{ fontSize: 'clamp(4rem, 8vw, 110px)', lineHeight: 0.88, color: '#FFFFFF', textShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+          >
+            LET'S<br />CONNECT.
+          </h2>
+          <p className="font-body text-[18px] sm:text-[20px] mt-8 max-w-sm" style={{ color: 'rgba(255,255,255,0.95)', lineHeight: 1.6 }}>
+            Every great frame starts with a conversation. Drop a signal and I'll route it back.
+          </p>
 
-            <input
-              type="text"
-              placeholder="PROD. NAME (Your Name)"
-              required
-              value={nameValue}
-              onChange={e => setNameValue(e.target.value)}
-              className="w-full bg-[#1A1A1A] border-b-2 border-[#333] text-white font-mono text-[10px] sm:text-[13px] tracking-wide px-4 py-3 sm:py-4 focus:outline-none focus:border-[#FFE066] transition-colors rounded-t-md"
-            />
-
-            <input
-              type="email"
-              placeholder="CONTACT FREQ. (Your Email)"
-              required
-              value={emailValue}
-              onChange={e => setEmailValue(e.target.value)}
-              className="w-full bg-[#1A1A1A] border-b-2 border-[#333] text-white font-mono text-[10px] sm:text-[13px] tracking-wide px-4 py-3 sm:py-4 focus:outline-none focus:border-[#FFE066] transition-colors rounded-t-md"
-            />
-
-            <button
-              type="submit"
-              className="mt-2 w-full bg-white text-[#111] hover:bg-[#FFE066] transition-colors duration-300 font-mono text-[12px] sm:text-[14px] font-bold tracking-[0.2em] uppercase py-3 sm:py-4 rounded-md flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,224,102,0.3)]"
+          {/* Social links */}
+          <div className="flex flex-col gap-4 mt-10 items-center xl:items-start">
+            <div className="flex items-center gap-4 justify-center xl:justify-start">
+              {socials.map(({ href, label }) => (
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+                  className={`btn-3d inline-flex items-center justify-center p-[14px] leading-none ${label === 'X' ? 'btn-3d-dark text-white' : 'btn-3d-lightblue text-[#01333F]'}`}
+                >
+                  {label === 'X' ? (
+                    /* Official X logo SVG */
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden>
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                  ) : (
+                    <Linkedin size={20} strokeWidth={2} />
+                  )}
+                </a>
+              ))}
+            </div>
+            {/* Email */}
+            <a
+              href="mailto:contactshitij7@gmail.com"
+              className="font-mono text-[13px] tracking-wide hover:underline transition-all"
+              style={{ color: 'rgba(255,255,255,0.75)' }}
             >
-              BOOK A SCENE
-              <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            </button>
+              contactshitij7@gmail.com
+            </a>
+          </div>
+        </motion.div>
 
-          </form>
-        </div>
+        {/* Right Side: The Clapperboard Frame & Form */}
+        <motion.div
+          className="w-full max-w-xl"
+          initial={{ opacity: 0, scale: 0.95, x: 30 }}
+          animate={isInView ? { opacity: 1, scale: 1, x: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.2, ease: [0.22,1,0.36,1] }}
+          onMouseEnter={() => setIsFormHovered(true)}
+          onMouseLeave={() => setIsFormHovered(false)}
+        >
+          <ClapperboardFrame>
+            <ContactForm />
+          </ClapperboardFrame>
+        </motion.div>
 
       </div>
-
-      {/* Social Media Footer */}
-      <motion.div
-        className="relative z-30 pb-12 pt-8 flex items-center justify-center gap-8 sm:gap-12"
-        initial={{ opacity: 0, y: 20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.9, duration: 0.5 }}
-      >
-        <a href="#" className="text-[#FFE066] drop-shadow-[0_0_15px_rgba(255,224,102,0.8)] hover:drop-shadow-[0_0_25px_rgba(255,224,102,1)] hover:scale-125 transition-all duration-300">
-          <Linkedin size={28} />
-        </a>
-        <a href="#" className="text-[#FFE066] drop-shadow-[0_0_15px_rgba(255,224,102,0.8)] hover:drop-shadow-[0_0_25px_rgba(255,224,102,1)] hover:scale-125 transition-all duration-300">
-          <Twitter size={28} />
-        </a>
-        <a href="#" className="text-[#FFE066] drop-shadow-[0_0_15px_rgba(255,224,102,0.8)] hover:drop-shadow-[0_0_25px_rgba(255,224,102,1)] hover:scale-125 transition-all duration-300">
-          <Instagram size={28} />
-        </a>
-        <a href="#" className="text-[#FFE066] drop-shadow-[0_0_15px_rgba(255,224,102,0.8)] hover:drop-shadow-[0_0_25px_rgba(255,224,102,1)] hover:scale-125 transition-all duration-300">
-          <Mail size={28} />
-        </a>
-      </motion.div>
-
     </section>
   );
 };

@@ -12,7 +12,7 @@ const XIcon = ({ className = "" }: { className?: string }) => (
 /* ─── Email tile is featured (full-width on its own row, accented) ─── */
 const emailTile = {
   icon: <Mail className="w-6 h-6" />,
-  label: 'Email Us',
+  label: 'Email Me',
   value: 'hello@operacreatives.com',
   href: 'mailto:hello@operacreatives.com',
   featured: true,
@@ -97,7 +97,7 @@ const ContactSection = () => {
             Let's Connect.
           </h2>
           <p className="mt-4 text-muted-foreground text-base sm:text-lg max-w-lg">
-            Reach out through any channel — we'd love to hear about your project.
+            Reach out through any channel — I'd love to hear about your project.
           </p>
         </motion.div>
 

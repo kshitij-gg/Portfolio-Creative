@@ -117,7 +117,7 @@ const ServicesSection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          WHAT WE DO
+          WHAT I DO
         </motion.span>
 
         {/* S3: Updated copy */}
@@ -127,7 +127,7 @@ const ServicesSection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          Our Craft. Your Vision.
+          My Craft. Your Vision.
         </motion.h2>
 
         <div className="mt-16 space-y-1">

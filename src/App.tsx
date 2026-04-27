@@ -5,14 +5,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import AnimatedRoutes from "./components/AnimatedRoutes";
-import SmoothScroll from "./components/SmoothScroll";
-import IntroLoader from "./components/IntroLoader";
 import { IntroContext } from "./contexts/IntroContext";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [introDone, setIntroDone] = useState(false);
 
   useEffect(() => {
     // Prevent browser from restoring scroll position on refresh
@@ -28,13 +25,14 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        {!introDone && <IntroLoader onDone={() => setIntroDone(true)} />}
-        <IntroContext.Provider value={introDone}>
+
+        {/* Intro animation has been removed. All components animate in immediately. */}
+        <IntroContext.Provider value={true}>
           <BrowserRouter>
-            <SmoothScroll />
             <AnimatedRoutes />
           </BrowserRouter>
         </IntroContext.Provider>
+
       </TooltipProvider>
     </QueryClientProvider>
   );

@@ -9,7 +9,7 @@ const steps = [
     subtitle: 'Concept & Script',
     venue: 'La Scala',
     curtain: 'RISES AT DUSK',
-    desc: 'Every great opera starts with a libretto. We shape the core concept, voice, and narrative arc, proving the story works before a single pixel is synthesized.'
+    desc: 'Every great production starts with a script. I shape the core concept, voice, and narrative arc, proving the story works before a single pixel is synthesized.'
   },
   { 
     act: 'ACT II', 
@@ -69,141 +69,191 @@ const MaestroSVG = ({ isAnimating }: { isAnimating: boolean }) => {
            0%, 100% { transform: rotate(0deg); }
            50% { transform: rotate(15deg); }
         }
+        @keyframes batonGlow {
+           0%, 100% { opacity: 0.5; filter: blur(5px); }
+           50% { opacity: 1; filter: blur(8px); }
+        }
       `}</style>
+
+      <defs>
+        <linearGradient id="tuxDark" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#1A1A1A" />
+          <stop offset="50%" stopColor="#0D0D0D" />
+          <stop offset="100%" stopColor="#050505" />
+        </linearGradient>
+        <linearGradient id="tuxLapel" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#222" />
+          <stop offset="100%" stopColor="#0A0A0A" />
+        </linearGradient>
+        <linearGradient id="shirtGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="100%" stopColor="#E0DCD3" />
+        </linearGradient>
+        <radialGradient id="skinGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#F5E6CE" />
+          <stop offset="80%" stopColor="#DCA477" />
+          <stop offset="100%" stopColor="#C18556" />
+        </radialGradient>
+        <radialGradient id="hairGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#EAEAEA" />
+          <stop offset="100%" stopColor="#999999" />
+        </radialGradient>
+        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FFE066" />
+          <stop offset="50%" stopColor="#D4AF37" />
+          <stop offset="100%" stopColor="#AA8015" />
+        </linearGradient>
+        <filter id="maestroShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="15" stdDeviation="15" floodOpacity="0.4" floodColor="#000" />
+        </filter>
+        <filter id="lightShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="5" stdDeviation="3" floodOpacity="0.5" floodColor="#000" />
+        </filter>
+      </defs>
 
       {/* Cinematic Golden Spotlight behind Maestro */}
       <path d="M 150 800 C 150 500 450 500 450 800 Z" fill="#FFE066" opacity="0.15" filter="blur(40px)" />
 
-      {/* Main Group: Breathing (Slightly more passionate, heavy breathing) */}
-      <g style={{ animation: 'conductBreathe 4s ease-in-out infinite', animationPlayState: animState, transformOrigin: '300px 700px' }}>
+      {/* Main Group: Breathing */}
+      <g style={{ animation: 'conductBreathe 4s ease-in-out infinite', animationPlayState: animState, transformOrigin: '300px 700px' }} filter="url(#maestroShadow)">
 
         {/* --- BODY (Tuxedo) - Robust Build --- */}
-        {/* Tuxedo Shoulders & Chest */}
         {/* Left Shoulder */}
-        <path d="M 300 450 L 160 440 C 100 460 60 520 60 600 L 70 800 L 300 800 Z" fill="#111" />
+        <path d="M 300 450 L 160 440 C 100 460 60 520 60 600 L 70 800 L 300 800 Z" fill="url(#tuxDark)" stroke="#111" strokeWidth="2" />
         {/* Right Shoulder */}
-        <path d="M 300 450 L 440 440 C 500 460 540 520 540 600 L 530 800 L 300 800 Z" fill="#151515" />
+        <path d="M 300 450 L 440 440 C 500 460 540 520 540 600 L 530 800 L 300 800 Z" fill="url(#tuxDark)" stroke="#111" strokeWidth="2" />
         
-        {/* White Shirt base (Broad chest) */}
-        <path d="M 220 400 L 380 400 L 420 800 L 180 800 Z" fill="#F8F4EC" />
+        {/* White Shirt base */}
+        <path d="M 220 400 L 380 400 L 420 800 L 180 800 Z" fill="url(#shirtGrad)" />
         
         {/* Shirt Pleats */}
-        <line x1="250" y1="450" x2="230" y2="800" stroke="#E8E4DC" strokeWidth="3" />
-        <line x1="270" y1="450" x2="260" y2="800" stroke="#E8E4DC" strokeWidth="3" />
-        <line x1="330" y1="450" x2="340" y2="800" stroke="#E8E4DC" strokeWidth="3" />
-        <line x1="350" y1="450" x2="370" y2="800" stroke="#E8E4DC" strokeWidth="3" />
+        <line x1="250" y1="450" x2="230" y2="800" stroke="#CFCBC2" strokeWidth="4" />
+        <line x1="270" y1="450" x2="260" y2="800" stroke="#CFCBC2" strokeWidth="4" />
+        <line x1="330" y1="450" x2="340" y2="800" stroke="#CFCBC2" strokeWidth="4" />
+        <line x1="350" y1="450" x2="370" y2="800" stroke="#CFCBC2" strokeWidth="4" />
 
         {/* Gold Studs */}
-        <circle cx="300" cy="500" r="4" fill="#D4AF37" />
-        <circle cx="300" cy="560" r="4" fill="#D4AF37" />
-        <circle cx="300" cy="620" r="4" fill="#D4AF37" />
-        <circle cx="300" cy="680" r="4" fill="#D4AF37" />
-        <circle cx="300" cy="740" r="4" fill="#D4AF37" />
+        <circle cx="300" cy="500" r="5" fill="url(#goldGrad)" filter="url(#lightShadow)" />
+        <circle cx="300" cy="560" r="5" fill="url(#goldGrad)" filter="url(#lightShadow)" />
+        <circle cx="300" cy="620" r="5" fill="url(#goldGrad)" filter="url(#lightShadow)" />
+        <circle cx="300" cy="680" r="5" fill="url(#goldGrad)" filter="url(#lightShadow)" />
+        <circle cx="300" cy="740" r="5" fill="url(#goldGrad)" filter="url(#lightShadow)" />
 
-        {/* Tuxedo Lapels (Wide) */}
-        <path d="M 200 440 L 300 650 L 260 480 Z" fill="#0A0A0A" />
-        <path d="M 400 440 L 300 650 L 340 480 Z" fill="#0D0D0D" />
+        {/* Tuxedo Lapels (Wide & Elegant) */}
+        <path d="M 200 440 L 300 650 L 260 480 Z" fill="url(#tuxLapel)" filter="url(#lightShadow)" />
+        <path d="M 400 440 L 300 650 L 340 480 Z" fill="url(#tuxLapel)" filter="url(#lightShadow)" />
+        
+        {/* Lapel silk highlights */}
+        <path d="M 210 450 L 290 630" stroke="#333" strokeWidth="2" fill="none" opacity="0.5" />
+        <path d="M 390 450 L 310 630" stroke="#333" strokeWidth="2" fill="none" opacity="0.5" />
 
-        {/* Bowtie & Collar (White on White) */}
-        <polygon points="230,380 295,430 300,410" fill="#FFF" stroke="#E8E4DC" strokeWidth="1" />
-        <polygon points="370,380 305,430 300,410" fill="#FFF" stroke="#E8E4DC" strokeWidth="1" />
-        {/* Big White Classic Bowtie */}
-        <path d="M 230,420 L 290,440 L 230,460 Z" fill="#F8F4EC" stroke="#E8E4DC" strokeWidth="2" strokeLinejoin="round" />
-        <path d="M 370,420 L 310,440 L 370,460 Z" fill="#F8F4EC" stroke="#E8E4DC" strokeWidth="2" strokeLinejoin="round" />
-        <rect x="285" y="430" width="30" height="20" rx="5" fill="#F8F4EC" stroke="#E8E4DC" strokeWidth="2" />
+        {/* Bowtie & Collar */}
+        <polygon points="230,380 295,430 300,410" fill="#FFF" stroke="#D0CCBE" strokeWidth="2" />
+        <polygon points="370,380 305,430 300,410" fill="#FFF" stroke="#D0CCBE" strokeWidth="2" />
+        
+        <path d="M 230,420 L 290,440 L 230,460 Z" fill="url(#shirtGrad)" stroke="#C0BCB0" strokeWidth="2" strokeLinejoin="round" filter="url(#lightShadow)" />
+        <path d="M 370,420 L 310,440 L 370,460 Z" fill="url(#shirtGrad)" stroke="#C0BCB0" strokeWidth="2" strokeLinejoin="round" filter="url(#lightShadow)" />
+        <rect x="285" y="430" width="30" height="20" rx="5" fill="#FFF" stroke="#D0CCBE" strokeWidth="2" />
 
-        {/* --- LEFT ARM (Clenched/Expressive) --- */}
+        {/* --- LEFT ARM --- */}
         <g style={{ animation: 'leftArmConduct 5s ease-in-out infinite', animationPlayState: animState, transformOrigin: '140px 480px' }}>
-          {/* Upper arm / sleeve */}
-          <path d="M 140 460 Q 50 500 70 420" fill="none" stroke="#000" strokeWidth="50" strokeLinecap="round" />
-          <path d="M 140 460 Q 50 500 70 420" fill="none" stroke="#111" strokeWidth="45" strokeLinecap="round" />
-          {/* Hand (Clenched fist expressing tension) */}
-          <circle cx="70" cy="400" r="22" fill="#EADBC1" />
-          {/* Fingers / Knuckles */}
-          <path d="M 55 390 Q 70 380 85 390 M 52 400 Q 70 395 88 400 M 55 410 Q 70 410 85 410" fill="none" stroke="#D6C4AD" strokeWidth="3" strokeLinecap="round" />
+          <path d="M 140 460 Q 50 500 70 420" fill="none" stroke="url(#tuxDark)" strokeWidth="50" strokeLinecap="round" />
+          
+          {/* French Cuff */}
+          <path d="M 85 435 L 55 405 L 45 420 L 75 450 Z" fill="url(#shirtGrad)" stroke="#D0CCBE" strokeWidth="2" />
+          <circle cx="65" cy="425" r="4" fill="url(#goldGrad)" />
+          
+          {/* Hand */}
+          <circle cx="70" cy="400" r="22" fill="url(#skinGrad)" filter="url(#lightShadow)" />
+          <path d="M 55 390 Q 70 380 85 390 M 52 400 Q 70 395 88 400 M 55 410 Q 70 410 85 410" fill="none" stroke="#A76840" strokeWidth="3" strokeLinecap="round" />
         </g>
 
-        {/* --- RIGHT ARM (Holding Baton, positioned up and forward) --- */}
+        {/* --- RIGHT ARM --- */}
         <g style={{ animation: 'rightArmConduct 4.5s ease-in-out infinite', animationPlayState: animState, transformOrigin: '460px 480px' }}>
-          {/* Sleeve reaching up */}
-          <path d="M 460 460 Q 550 490 530 380" fill="none" stroke="#000" strokeWidth="50" strokeLinecap="round" />
-          <path d="M 460 460 Q 550 490 530 380" fill="none" stroke="#151515" strokeWidth="45" strokeLinecap="round" />
+          <path d="M 460 460 Q 550 490 530 380" fill="none" stroke="url(#tuxDark)" strokeWidth="50" strokeLinecap="round" />
           
-          {/* Conductor's Hand holding baton firmly */}
-          <circle cx="530" cy="360" r="18" fill="#EADBC1" />
-          <path d="M 520 355 Q 530 350 545 365" fill="none" stroke="#D6C4AD" strokeWidth="3" strokeLinecap="round" />
+          {/* French Cuff */}
+          <path d="M 515 400 L 545 375 L 555 390 L 525 415 Z" fill="url(#shirtGrad)" stroke="#D0CCBE" strokeWidth="2" />
+          <circle cx="535" cy="395" r="4" fill="url(#goldGrad)" />
           
-          {/* Baton (Sweeping animation on wrist) */}
+          {/* Hand */}
+          <circle cx="530" cy="360" r="18" fill="url(#skinGrad)" filter="url(#lightShadow)" />
+          <path d="M 520 355 Q 530 350 545 365" fill="none" stroke="#A76840" strokeWidth="3" strokeLinecap="round" />
+          
+          {/* Baton */}
           <g style={{ animation: 'batonSweep 3s ease-in-out infinite', animationPlayState: animState, transformOrigin: '530px 360px' }}>
-             {/* Cork handle */}
-             <line x1="510" y1="380" x2="535" y2="355" stroke="#A67B5B" strokeWidth="8" strokeLinecap="round" />
-             {/* White stick reaching high */}
-             <line x1="535" y1="355" x2="380" y2="150" stroke="#FFF" strokeWidth="3" strokeLinecap="round" />
+             {/* Baton glowing trail */}
+             <line x1="535" y1="355" x2="380" y2="150" stroke="#FFF" strokeWidth="10" strokeLinecap="round" style={{ animation: 'batonGlow 2s infinite' }} />
+             {/* Core stick */}
+             <line x1="535" y1="355" x2="380" y2="150" stroke="#FFF" strokeWidth="4" strokeLinecap="round" />
+             {/* Handle */}
+             <line x1="510" y1="380" x2="535" y2="355" stroke="#4A2F1D" strokeWidth="10" strokeLinecap="round" />
+             <line x1="512" y1="378" x2="533" y2="357" stroke="#68422A" strokeWidth="4" strokeLinecap="round" />
           </g>
         </g>
 
-        {/* --- HEAD & FACE (Robust, passionate, fluffy grey hair, glasses) --- */}
+        {/* --- HEAD & FACE --- */}
         <g style={{ animation: 'headSway 6s ease-in-out infinite', animationPlayState: animState, transformOrigin: '300px 420px' }}>
           
-          {/* Neck (Thick) */}
-          <path d="M 260 370 L 340 370 L 350 430 L 250 430 Z" fill="#D6C4AD" />
+          {/* Neck */}
+          <path d="M 260 370 L 340 370 L 350 430 L 250 430 Z" fill="url(#skinGrad)" />
+          <path d="M 260 380 Q 300 400 340 380" fill="none" stroke="#A76840" strokeWidth="4" opacity="0.5" />
           
-          {/* Hair (Back volume - Fluffy grey clouds) */}
-          <path d="M 200 250 C 180 150 250 100 300 100 C 350 100 420 150 400 250 C 430 300 430 350 390 380 C 360 400 240 400 210 380 C 170 350 170 300 200 250 Z" fill="#C4C6C8" opacity="0.9" />
-          {/* Extra curl bumps for texture */}
-          <circle cx="210" cy="180" r="30" fill="#D0D2D4" />
-          <circle cx="250" cy="130" r="35" fill="#D0D2D4" />
-          <circle cx="310" cy="110" r="40" fill="#C4C6C8" />
-          <circle cx="360" cy="150" r="35" fill="#D0D2D4" />
-          <circle cx="390" cy="210" r="30" fill="#BDBFC0" />
-          <circle cx="400" cy="300" r="35" fill="#C4C6C8" />
-          <circle cx="200" cy="300" r="35" fill="#BDBFC0" />
-          <circle cx="220" cy="350" r="25" fill="#D0D2D4" />
-          <circle cx="380" cy="350" r="25" fill="#D0D2D4" />
+          {/* Hair back layer */}
+          <path d="M 200 250 C 180 150 250 100 300 100 C 350 100 420 150 400 250 C 430 300 430 350 390 380 C 360 400 240 400 210 380 C 170 350 170 300 200 250 Z" fill="url(#hairGrad)" filter="url(#lightShadow)" />
+          
+          {[
+            {cx: 210, cy: 180, r: 30}, {cx: 250, cy: 130, r: 35}, {cx: 310, cy: 110, r: 40},
+            {cx: 360, cy: 150, r: 35}, {cx: 390, cy: 210, r: 30}, {cx: 400, cy: 300, r: 35},
+            {cx: 200, cy: 300, r: 35}, {cx: 220, cy: 350, r: 25}, {cx: 380, cy: 350, r: 25}
+          ].map((c, i) => <circle key={i} cx={c.cx} cy={c.cy} r={c.r} fill="url(#hairGrad)" />)}
 
-          {/* Face Base (Wider, rounder, robust jawline and double chin) */}
-          <path d="M 230 200 C 230 150 370 150 370 200 C 380 250 370 320 350 360 C 330 390 270 390 250 360 C 230 320 220 250 230 200 Z" fill="#EADBC1" />
+          {/* Face Base */}
+          <path d="M 230 200 C 230 150 370 150 370 200 C 380 250 370 320 350 360 C 330 390 270 390 250 360 C 230 320 220 250 230 200 Z" fill="url(#skinGrad)" />
           
           {/* Cheeks / Jowls */}
-          <path d="M 245 320 Q 235 350 260 375" fill="none" stroke="#D6C4AD" strokeWidth="4" strokeLinecap="round" />
-          <path d="M 355 320 Q 365 350 340 375" fill="none" stroke="#D6C4AD" strokeWidth="4" strokeLinecap="round" />
+          <path d="M 245 320 Q 235 350 260 375" fill="none" stroke="#A76840" strokeWidth="4" strokeLinecap="round" opacity="0.6"/>
+          <path d="M 355 320 Q 365 350 340 375" fill="none" stroke="#A76840" strokeWidth="4" strokeLinecap="round" opacity="0.6"/>
 
           {/* Ears */}
-          <ellipse cx="225" cy="270" rx="12" ry="20" fill="#D6C4AD" />
-          <ellipse cx="375" cy="270" rx="12" ry="20" fill="#D6C4AD" />
-          
-          {/* Hair (Receding top/front wisps) */}
-          <path d="M 240 180 Q 300 130 360 180 Q 330 150 300 150 Q 270 150 240 180" fill="none" stroke="#C4C6C8" strokeWidth="3" strokeLinecap="round" opacity="0.6" />
-          <path d="M 280 140 Q 300 120 320 140" fill="none" stroke="#D0D2D4" strokeWidth="2" strokeLinecap="round" />
+          <ellipse cx="225" cy="270" rx="14" ry="22" fill="url(#skinGrad)" />
+          <ellipse cx="375" cy="270" rx="14" ry="22" fill="url(#skinGrad)" />
+          <path d="M 225 260 Q 215 270 225 280" fill="none" stroke="#A76840" strokeWidth="2" opacity="0.6"/>
+          <path d="M 375 260 Q 385 270 375 280" fill="none" stroke="#A76840" strokeWidth="2" opacity="0.6"/>
 
-          {/* Facial Features */}
-          {/* Grey/White Bushy Brows */}
-          <path d="M 255 240 Q 270 235 285 245" fill="none" stroke="#E8E8E8" strokeWidth="6" strokeLinecap="round" />
-          <path d="M 345 240 Q 330 235 315 245" fill="none" stroke="#E8E8E8" strokeWidth="6" strokeLinecap="round" />
-          
-          {/* Eyes (Intense, focused downwards/closed) */}
-          <path d="M 260 260 Q 270 265 280 260" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" />
-          <path d="M 340 260 Q 330 265 320 260" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" />
-          {/* Eye bags */}
-          <path d="M 258 275 Q 270 285 282 275" fill="none" stroke="#CBA88D" strokeWidth="2" strokeLinecap="round" />
-          <path d="M 342 275 Q 330 285 318 275" fill="none" stroke="#CBA88D" strokeWidth="2" strokeLinecap="round" />
+          {/* Wispy Hair Overlay */}
+          <path d="M 240 180 Q 300 130 360 180 Q 330 150 300 150 Q 270 150 240 180" fill="none" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" opacity="0.9" filter="url(#lightShadow)" />
+          <path d="M 280 140 Q 300 120 320 140" fill="none" stroke="#EAEAEA" strokeWidth="3" strokeLinecap="round" filter="url(#lightShadow)" />
 
-          {/* Glasses (Thin Gold/Wire rims) */}
-          <rect x="250" y="245" width="40" height="30" rx="8" fill="none" stroke="#D4AF37" strokeWidth="2.5" opacity="0.9" />
-          <rect x="310" y="245" width="40" height="30" rx="8" fill="none" stroke="#D4AF37" strokeWidth="2.5" opacity="0.9" />
-          <line x1="290" y1="255" x2="310" y2="255" stroke="#D4AF37" strokeWidth="2.5" />
-          {/* Temple arms of glasses */}
-          <line x1="250" y1="260" x2="225" y2="265" stroke="#D4AF37" strokeWidth="2" />
-          <line x1="350" y1="260" x2="375" y2="265" stroke="#D4AF37" strokeWidth="2" />
+          {/* Brows */}
+          <path d="M 255 240 Q 270 235 285 245" fill="none" stroke="#FFF" strokeWidth="7" strokeLinecap="round" filter="url(#lightShadow)" />
+          <path d="M 345 240 Q 330 235 315 245" fill="none" stroke="#FFF" strokeWidth="7" strokeLinecap="round" filter="url(#lightShadow)" />
           
-          {/* Nose (Broad) */}
-          <path d="M 300 255 L 305 295 L 290 300" fill="none" stroke="#CBA88D" strokeWidth="3" strokeLinecap="round" />
-          <path d="M 290 300 Q 300 305 310 300" fill="none" stroke="#CBA88D" strokeWidth="2" strokeLinecap="round" />
+          {/* Eyes */}
+          <path d="M 260 260 Q 270 265 280 260" fill="none" stroke="#222" strokeWidth="3" strokeLinecap="round" />
+          <path d="M 340 260 Q 330 265 320 260" fill="none" stroke="#222" strokeWidth="3" strokeLinecap="round" />
+          <path d="M 255 278 Q 270 288 285 278" fill="none" stroke="#A76840" strokeWidth="3" strokeLinecap="round" opacity="0.7"/>
+          <path d="M 345 278 Q 330 288 315 278" fill="none" stroke="#A76840" strokeWidth="3" strokeLinecap="round" opacity="0.7"/>
 
-          {/* Mouth (Open wide, singing or breathing deeply with passion) */}
-          <ellipse cx="300" cy="340" rx="16" ry="12" fill="#2A1010" />
-          {/* Lower lip / chin crease */}
-          <path d="M 288 360 Q 300 365 312 360" fill="none" stroke="#CBA88D" strokeWidth="2" strokeLinecap="round" />
+          {/* Glasses */}
+          <rect x="245" y="240" width="45" height="35" rx="10" fill="rgba(255,255,255,0.1)" stroke="url(#goldGrad)" strokeWidth="3" filter="url(#lightShadow)" />
+          <rect x="310" y="240" width="45" height="35" rx="10" fill="rgba(255,255,255,0.1)" stroke="url(#goldGrad)" strokeWidth="3" filter="url(#lightShadow)" />
+          {/* Specular reflections on glasses */}
+          <line x1="255" y1="245" x2="270" y2="270" stroke="#FFF" strokeWidth="4" opacity="0.6" strokeLinecap="round" />
+          <line x1="320" y1="245" x2="335" y2="270" stroke="#FFF" strokeWidth="4" opacity="0.6" strokeLinecap="round" />
+          
+          <line x1="290" y1="255" x2="310" y2="255" stroke="url(#goldGrad)" strokeWidth="3" />
+          <line x1="245" y1="255" x2="220" y2="260" stroke="url(#goldGrad)" strokeWidth="2.5" />
+          <line x1="355" y1="255" x2="380" y2="260" stroke="url(#goldGrad)" strokeWidth="2.5" />
+          
+          {/* Nose */}
+          <path d="M 300 255 L 308 295 L 290 300" fill="none" stroke="#9E5D36" strokeWidth="4" strokeLinecap="round" />
+          <path d="M 290 300 Q 300 305 310 300" fill="none" stroke="#9E5D36" strokeWidth="3" strokeLinecap="round" />
+
+          {/* Mouth */}
+          <ellipse cx="300" cy="340" rx="18" ry="14" fill="#2A1010" />
+          <path d="M 290 335 Q 300 340 310 335" fill="none" stroke="#FFF" strokeWidth="2" strokeLinecap="round"/> {/* teeth */}
+          <path d="M 285 362 Q 300 368 315 362" fill="none" stroke="#A76840" strokeWidth="3" strokeLinecap="round" opacity="0.8" />
         </g>
       </g>
     </svg>
@@ -239,10 +289,10 @@ const HowWeCreateSection = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <span className="font-mono text-[#111111] text-[13px] tracking-[0.4em] font-bold uppercase block mb-4">
-            HOW WE DO IT
+            HOW I DO IT
           </span>
           <h2 className="font-heading uppercase text-[#111111] tracking-wider" style={{ fontSize: 'clamp(40px, 7vw, 90px)', lineHeight: 0.9 }}>
-            WE CREATE <span className="text-[#FF4B6E] italic pr-2">MAGIC</span>.
+            I CREATE <span className="text-[#F48B29] italic pr-2">MAGIC</span>.
           </h2>
         </motion.div>
 
@@ -308,7 +358,7 @@ const HowWeCreateSection = () => {
                       <div className="hidden sm:flex flex-col justify-between py-2 pr-6 border-r border-[#D4AF37]/20 min-w-[120px] max-w-[120px]">
                          <div>
                            <div className="font-mono text-[9px] text-[#D4AF37]/50 tracking-widest uppercase mb-1">SEQUENCE</div>
-                           <div className="font-mono text-[13px] text-[#FF4B6E] tracking-widest uppercase mb-4">{steps[currentStep].act}</div>
+                           <div className="font-mono text-[13px] text-[#F48B29] tracking-widest uppercase mb-4">{steps[currentStep].act}</div>
                            
                            <div className="font-mono text-[9px] text-[#D4AF37]/50 tracking-widest uppercase mb-1">VENUE</div>
                            <div className="font-mono text-[10px] text-[#D4AF37] tracking-widest uppercase mb-4 leading-tight">{steps[currentStep].venue}</div>
@@ -327,7 +377,7 @@ const HowWeCreateSection = () => {
                       {/* Main Copy Area */}
                       <div className="flex-1 py-4 flex flex-col justify-center">
                         {/* Mobile Metadata */}
-                        <span className="sm:hidden font-mono text-[#FF4B6E] text-[12px] tracking-[0.2em] font-bold uppercase mb-4 flex items-center gap-3">
+                        <span className="sm:hidden font-mono text-[#F48B29] text-[12px] tracking-[0.2em] font-bold uppercase mb-4 flex items-center gap-3">
                            {steps[currentStep].act} <span className="text-[#555]">|</span> {steps[currentStep].venue}
                         </span>
                         

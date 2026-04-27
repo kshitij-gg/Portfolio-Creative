@@ -67,7 +67,7 @@ const ToolsSection = () => {
           className={`font-mono-tech text-xs sm:text-sm tracking-[0.2em] text-primary uppercase transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
         >
-          OUR TOOLKIT
+          MY TOOLKIT
         </span>
 
         <h2

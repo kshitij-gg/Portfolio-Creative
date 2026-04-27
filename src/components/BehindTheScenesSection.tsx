@@ -15,7 +15,7 @@ const steps: ProcessStep[] = [
   {
     number: '01',
     title: 'Concept & Script',
-    description: 'We tear down the brief and rebuild it as a cinematic vision. Scene-by-scene drafts, dialogues, mood references, and exact time-codes.',
+    description: 'I tear down the brief and rebuild it as a cinematic vision. Scene-by-scene drafts, dialogues, mood references, and exact time-codes.',
     icon: <Lightbulb className="w-7 h-7" />,
     accentColor: 'hsl(var(--accent))',
     details: ['Ideation & Storyboarding', 'AI Script Refinement', 'Pacing & Time-coding'],
@@ -23,7 +23,7 @@ const steps: ProcessStep[] = [
   {
     number: '02',
     title: 'Look & Pre-viz',
-    description: 'Before motion begins, we define the exact aesthetic — testing dozens of AI models to lock lighting, camera angles, and character consistency.',
+    description: 'Before motion begins, I define the exact aesthetic — testing dozens of AI models to lock lighting, camera angles, and character consistency.',
     icon: <Palette className="w-7 h-7" />,
     accentColor: 'hsl(var(--accent))',
     details: ['Engine Selection', 'Lighting & Composition', 'Character Consistency'],
@@ -39,7 +39,7 @@ const steps: ProcessStep[] = [
   {
     number: '04',
     title: 'Post-production',
-    description: 'Raw generations are the beginning. We stitch, grade, upscale, and master audio — turning AI fragments into theater-ready film.',
+    description: 'Raw generations are the beginning. I stitch, grade, upscale, and master audio — turning AI fragments into theater-ready film.',
     icon: <Film className="w-7 h-7" />,
     accentColor: 'hsl(var(--accent))',
     details: ['VFX Compositing', 'Cinematic Grading', 'Sound Mixing & Upscaling'],
@@ -119,7 +119,7 @@ const BehindTheScenesSection = () => {
               </div>
 
               <h2 className="font-heading text-4xl sm:text-5xl md:text-6xl text-foreground leading-tight">
-                How We Create <br className="hidden lg:block" />
+                How I Create <br className="hidden lg:block" />
                 <span className="text-accent italic">Magic.</span>
               </h2>
 

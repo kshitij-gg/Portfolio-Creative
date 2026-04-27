@@ -1,169 +1,257 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 
 const visualProjects = [
-  { id: 1, title: 'THE ARIA CAMPAIGN', category: 'Fashion Co · Visual Campaign', tag: '▶ AI FILM',    note: '"Shot entirely with soul & wit — 48 hours, start to finish."', image: 'https://images.pexels.com/photos/14234280/pexels-photo-14234280.jpeg?auto=compress&cs=tinysrgb&w=1920' },
-  { id: 2, title: 'NEON PULSE',        category: 'Tech Brand · Campaign',        tag: '▶ CAMPAIGN',   note: '"2.4M views in 72 hours. AI-first social campaign."',          image: 'https://images.pexels.com/photos/3844788/pexels-photo-3844788.jpeg?auto=compress&cs=tinysrgb&w=1920' },
-  { id: 3, title: 'VELOCITY',          category: 'Automotive · Commercial',      tag: '▶ COMMERCIAL', note: '"Where AI meets automotive perfection."',                       image: 'https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=1280' },
+  { id: 1, url: 'https://player.vimeo.com/video/1165995105?h=15e21dc6dc', ratio: '16/9' },
+  { id: 2, url: 'https://player.vimeo.com/video/1153960232?h=0e89f3bd41', ratio: '16/9' },
+  { id: 3, url: 'https://player.vimeo.com/video/1186915669?h=ec2b467d83', ratio: '16/9' },
+  { id: 4, url: 'https://player.vimeo.com/video/1152867925?h=c2a5b7b929', ratio: '16/9' },
+  { id: 5, url: 'https://player.vimeo.com/video/1152866745?h=94a4f3808f', ratio: '426/190' },
+  { id: 6, url: 'https://player.vimeo.com/video/1152865784?h=9ed5390116', ratio: '426/182' },
 ];
 
-// All portrait 3:4 — eight images per row, three rows ( rows shift direction)
-const ROW1 = [
-  { id:  1, title: 'LUXURY ESSENTIALS', category: 'Product · AI',           note: '"Generated pure product aesthetics."',        image: 'https://images.pexels.com/photos/1126935/pexels-photo-1126935.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id:  2, title: 'SILK & SHADOW',     category: 'Fashion · Portrait',      note: '"Cinematic lighting meets haute couture."',   image: 'https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id:  3, title: 'AURIC GLOW',        category: 'Beauty · Portrait',       note: '"AI skin. Human soul."',                     image: 'https://images.pexels.com/photos/3622608/pexels-photo-3622608.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id:  4, title: 'AMBER RITUAL',      category: 'Fragrance · Still Life',  note: '"The scent of something rare."',             image: 'https://images.pexels.com/photos/2693212/pexels-photo-2693212.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id:  5, title: 'VOID THEORY',       category: 'Fashion · Concept',       note: '"Absence as a design element."',             image: 'https://images.pexels.com/photos/4195342/pexels-photo-4195342.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id:  6, title: 'ZENITH DROP',       category: 'Streetwear · Editorial',  note: '"Culture at its peak."',                    image: 'https://images.pexels.com/photos/5698401/pexels-photo-5698401.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id:  7, title: 'VELVET CRUSH',      category: 'Fashion · Campaign',      note: '"Luxury distilled into pixels."',            image: 'https://images.pexels.com/photos/2220316/pexels-photo-2220316.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id:  8, title: 'GOLDEN HOUR',       category: 'Lifestyle · Campaign',    note: '"Every second is cinematic."',              image: 'https://images.pexels.com/photos/1408221/pexels-photo-1408221.jpeg?auto=compress&cs=tinysrgb&w=600' },
-];
-
-const ROW2 = [
-  { id:  9, title: 'MIDNIGHT BLOOM',    category: 'Beauty · Editorial',      note: '"Dark aesthetics, luminous skin."',         image: 'https://images.pexels.com/photos/3768997/pexels-photo-3768997.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 10, title: 'STONE COLD',        category: 'Jewellery · Still',       note: '"Timeless objects, timeless ads."',         image: 'https://images.pexels.com/photos/1454171/pexels-photo-1454171.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 11, title: 'THE RITUAL',        category: 'Wellness · Brand',        note: '"Calm, by design."',                        image: 'https://images.pexels.com/photos/3756042/pexels-photo-3756042.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 12, title: 'CELESTIAL',         category: 'Jewellery · Editorial',   note: '"Light becomes jewellery."',               image: 'https://images.pexels.com/photos/1458671/pexels-photo-1458671.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 13, title: 'NEO-FUTURE',        category: 'Concept · Vertical',      note: '"Worldbuilding through still frames."',     image: 'https://images.pexels.com/photos/6620577/pexels-photo-6620577.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 14, title: 'ARCHITECTURAL',     category: 'Real Estate · AI',        note: '"Precision rendering of unbuilt spaces."',  image: 'https://images.pexels.com/photos/1638841/pexels-photo-1638841.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 15, title: 'GHOST BLOOM',       category: 'Perfume · Concept',       note: '"Invisible. Unforgettable."',              image: 'https://images.pexels.com/photos/3394347/pexels-photo-3394347.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 16, title: 'PRISM',             category: 'Abstract · Art',          note: '"Color as language."',                      image: 'https://images.pexels.com/photos/1629236/pexels-photo-1629236.jpeg?auto=compress&cs=tinysrgb&w=600' },
-];
-
-const ROW3 = [
-  { id: 17, title: 'CHROME NOIR',       category: 'Automotive · Editorial',  note: '"Where machines become art."',             image: 'https://images.pexels.com/photos/1689731/pexels-photo-1689731.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 18, title: 'COBALT RUSH',       category: 'Sports · Campaign',       note: '"Performance visualised."',                image: 'https://images.pexels.com/photos/863988/pexels-photo-863988.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 19, title: 'EMBER',             category: 'Spirits · Campaign',      note: '"Heat you can taste."',                    image: 'https://images.pexels.com/photos/3407777/pexels-photo-3407777.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 20, title: 'OBSIDIAN',          category: 'Tech · Product',          note: '"Dark matter, premium feel."',             image: 'https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 21, title: 'STEEL HORIZON',     category: 'Industrial · Brand',      note: '"Engineering meets artistry."',            image: 'https://images.pexels.com/photos/1624504/pexels-photo-1624504.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 22, title: 'DESERT LIGHT',      category: 'Lifestyle · Travel',      note: '"Stillness you can feel."',               image: 'https://images.pexels.com/photos/1509428/pexels-photo-1509428.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 23, title: 'NEON PULSE',        category: 'Tech · Campaign',         note: '"2.4M views in 72 hours."',               image: 'https://images.pexels.com/photos/3844788/pexels-photo-3844788.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 24, title: 'HORIZON PRIME',     category: 'Automotive · Panorama',   note: '"Unleashing speed in still perfection."',  image: 'https://images.pexels.com/photos/337909/pexels-photo-337909.jpeg?auto=compress&cs=tinysrgb&w=600' },
-];
-
-type LightboxItem = { src: string; title: string; category: string; note: string } | null;
-
-// ── Lightbox ─────────────────────────────────────────────────────────────────
-const Lightbox = ({ item, onClose }: { item: LightboxItem; onClose: () => void }) => {
-  useEffect(() => {
-    if (!item) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
-    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [item, onClose]);
-
-  return (
-    <AnimatePresence>
-      {item && (
-        <motion.div key="lightbox" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}
-          onClick={onClose}
-          style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.95)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24, cursor: 'zoom-out' }}
-        >
-          <button onClick={onClose} aria-label="Close"
-            style={{ position: 'absolute', top: 20, right: 24, background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', borderRadius: '50%', width: 44, height: 44, fontSize: 20, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
-          <motion.img src={item.src} alt={item.title}
-            initial={{ scale: 0.88, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            onClick={(e) => e.stopPropagation()}
-            style={{ maxWidth: '80vw', maxHeight: '80vh', objectFit: 'contain', borderRadius: 8, boxShadow: '0 40px 120px rgba(0,0,0,0.8)', cursor: 'default' }}
-          />
-          <motion.div initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.15 }}
-            style={{ marginTop: 24, textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
-            <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#ff6b6b', display: 'block', marginBottom: 6 }}>{item.category}</span>
-            <h3 style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 32, color: '#fff', letterSpacing: '0.06em', margin: 0 }}>{item.title}</h3>
-            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontStyle: 'italic', color: 'rgba(255,255,255,0.5)', marginTop: 8 }}>{item.note}</p>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
-
-// ── Single 3:4 card — 47vh tall so 2 rows fill the viewport ─────────────────
-const StaticCard = ({ item, onOpen }: { item: typeof ROW1[0]; onOpen: (item: typeof ROW1[0]) => void }) => (
-  <div
-    onClick={() => onOpen(item)}
-    className="group relative overflow-hidden cursor-zoom-in flex-shrink-0"
-    style={{
-      height: 'clamp(380px, 46vh, 700px)', // exactly scaled so ~2 rows fill the viewport
-      aspectRatio: '3/4',    
-      borderRadius: 10,
-      marginRight: 16, // slightly scaled up gap for larger photos
-    }}
-  >
-    <img
-      src={item.image}
-      alt={item.title}
-      loading="lazy"
-      decoding="async"
-      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', transition: 'transform 0.55s ease', willChange: 'transform' }}
-      className="group-hover:scale-[1.06]"
-    />
-    {/* Hover overlay */}
-    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 55%)', opacity: 0, transition: 'opacity 0.3s ease', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '20px 16px' }} className="group-hover:!opacity-100">
-      <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#ff6b6b', marginBottom: 5, display: 'block' }}>{item.category}</span>
-      <h4 style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 22, color: '#fff', letterSpacing: '0.04em', margin: 0 }}>{item.title}</h4>
-      <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 8, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: 8 }}>🔍 Click to expand</span>
-    </div>
-    {/* Badge */}
-    <div style={{ position: 'absolute', top: 10, left: 10 }} className="group-hover:opacity-0 transition-opacity duration-200">
-      <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 8, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#111', background: 'rgba(255,255,255,0.93)', padding: '3px 10px', borderRadius: 99 }}>■ STATIC</span>
-    </div>
-  </div>
-);
-
-// ── Marquee row — -50% trick: seamless loop at any viewport size ─────────────
-const MarqueeRow = ({
-  items,
-  direction = 'left',
-  speed = 40,
-  paused = false,
-  onOpen,
+// ── Video Card with smart thumbnail overlay ────────────────────────────────────
+// Vimeo thumbnail stays on top until the video is actually playing.
+// No loading spinner is ever visible — thumbnail covers it seamlessly.
+const VideoCard = ({
+  project,
+  index,
 }: {
-  items: typeof ROW1;
-  direction?: 'left' | 'right';
-  speed?: number;
-  paused?: boolean;
-  onOpen: (item: typeof ROW1[0]) => void;
+  project: typeof visualProjects[0];
+  index: number;
 }) => {
-  const doubled = [...items, ...items]; // duplicate → animate by exactly -50% for seamless loop
-  const id      = direction === 'left' ? 'smql' : 'smqr';
+  const iframeRef   = useRef<HTMLIFrameElement>(null);
+  const cardRef     = useRef<HTMLDivElement>(null);
+  // inView: true when card is within 300px of viewport — triggers lazy loading
+  const inView      = useInView(cardRef as React.RefObject<Element>, { once: true, margin: '300px' });
+  // videoReady: true once Vimeo fires its first 'play' event via postMessage
+  const [videoReady, setVideoReady] = useState(false);
+  // isPlaying: tracks hover play/pause state
+  const [isPlaying, setIsPlaying]   = useState(false);
+  // thumbUrl: securely fetches latest thumbnail instead of using cached fallback
+  const [thumbUrl, setThumbUrl]     = useState<string>('');
+
+  // ── Fetch the highest-quality thumbnail via Vimeo oEmbed API ──────────────
+  // oEmbed lets you request a specific width — Vimeo returns the largest
+  // size it has available (up to 1920px). The v2 API only gives _640 by default.
+  // Private videos need their hash passed in the URL parameter too.
+  useEffect(() => {
+    if (!inView) return; // ← only fetches when card enters viewport
+    const videoId = project.url.match(/video\/(\d+)/)?.[1];
+    const hash    = project.url.match(/[?&]h=([a-f0-9]+)/)?.[1];
+    if (!videoId) return;
+
+    // Build the vimeo.com URL (with hash if private)
+    const vimeoPageUrl = hash
+      ? `https://vimeo.com/${videoId}/${hash}`
+      : `https://vimeo.com/${videoId}`;
+
+    // oEmbed endpoint: width=1920 asks Vimeo for the highest-res thumbnail
+    fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoPageUrl)}&width=1920`)
+      .then(res => res.json())
+      .then(data => {
+        if (data?.thumbnail_url) {
+          setThumbUrl(data.thumbnail_url);
+        }
+      })
+      .catch(() => {}); // gracefully ignore network errors
+  }, [project.url, inView]);
+
+
+  // ── Listen for Vimeo postMessage events ─────────────────────────────────────
+  // Vimeo sends { event: 'play' } etc. when playback state changes.
+  // We use this to know the video has buffered enough to show — then we
+  // fade the thumbnail out so the video is revealed cleanly.
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (!e.data) return;
+      try {
+        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+        // Only react to events from this specific iframe's player
+        if (!iframeRef.current) return;
+        const iframeSrc = iframeRef.current.src;
+        const videoId = project.url.match(/video\/(\d+)/)?.[1];
+        if (!videoId || !iframeSrc.includes(videoId)) return;
+
+        if (data.event === 'play') {
+          // First play event = video is streaming & visible — safe to hide thumb
+          setVideoReady(true);
+          setIsPlaying(true);
+        }
+        if (data.event === 'pause') {
+          setIsPlaying(false);
+        }
+      } catch {
+        // non-JSON message — ignore
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [project.url]);
+
+  // ── Register this iframe with Vimeo's postMessage API ─────────────────────
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+    const onLoad = () => {
+      iframe.contentWindow?.postMessage(JSON.stringify({ method: 'addEventListener', value: 'play'  }), '*');
+      iframe.contentWindow?.postMessage(JSON.stringify({ method: 'addEventListener', value: 'pause' }), '*');
+    };
+    iframe.addEventListener('load', onLoad);
+    return () => iframe.removeEventListener('load', onLoad);
+  }, []);
+
+  const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const iframe = e.currentTarget.nextElementSibling as HTMLIFrameElement;
+    iframe?.contentWindow?.postMessage(JSON.stringify({ method: 'play' }), '*');
+  }, []);
+
+  const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const iframe = e.currentTarget.nextElementSibling as HTMLIFrameElement;
+    if (!iframe?.contentWindow) return;
+    iframe.contentWindow.postMessage(JSON.stringify({ method: 'pause' }), '*');
+    iframe.contentWindow.postMessage(JSON.stringify({ method: 'setCurrentTime', value: 0 }), '*');
+    // Reset thumbnail overlay so next hover shows thumb → video again
+    setVideoReady(false);
+    setIsPlaying(false);
+  }, []);
+
+  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const iframe = e.currentTarget.nextElementSibling as HTMLIFrameElement;
+    if (!iframe) return;
+    iframe.style.pointerEvents = 'auto';
+    iframe.style.transform = 'scale(1)';
+
+    const onFullscreenChange = () => {
+      if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
+        iframe.style.pointerEvents = 'none';
+        iframe.style.transform = 'scale(1.12)';
+        iframe.contentWindow?.postMessage(JSON.stringify({ method: 'pause' }), '*');
+        iframe.contentWindow?.postMessage(JSON.stringify({ method: 'setVolume', value: 0 }), '*');
+        // Reset thumb so next hover is clean
+        setVideoReady(false);
+        document.removeEventListener('fullscreenchange', onFullscreenChange);
+        document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
+      }
+    };
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+
+    iframe.contentWindow?.postMessage(JSON.stringify({ method: 'setVolume', value: 1 }), '*');
+
+    if (iframe.requestFullscreen) {
+      iframe.requestFullscreen().catch(() => {});
+    } else if ((iframe as any).webkitRequestFullscreen) {
+      (iframe as any).webkitRequestFullscreen();
+    }
+  }, []);
 
   return (
-    <div style={{ overflow: 'hidden', width: '100%', flexShrink: 0 }}>
+    <motion.div
+      ref={cardRef}
+      className="relative w-full rounded-xl mx-auto overflow-hidden"
+      style={{ aspectRatio: project.ratio || '16/9', background: '#111' }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-5%' }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+    >
+      {/* ── INVISIBLE INTERACTION OVERLAY ── */}
+      <div
+        className="absolute inset-0 z-20 cursor-pointer"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+      />
+
+      {/* ── VIMEO IFRAME ── deferred until card is near viewport */}
+      <iframe
+        ref={iframeRef}
+        title={`vimeo-player-${project.id}`}
+        src={inView ? `${project.url}&api=1&muted=1&autopause=0&title=0&byline=0&portrait=0&badge=0` : ''}
+        className="absolute inset-0 w-full h-full"
+        style={{
+          pointerEvents:   'none',
+          transform:       'scale(1.12)',
+          transformOrigin: 'center center',
+          transition:      'transform 0.2s ease-out',
+        }}
+        loading="lazy"
+        frameBorder="0"
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+        allowFullScreen
+      />
+
+      {/* ── MOBILE TAP BADGE — hidden on desktop (md+) ── */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 md:hidden pointer-events-none">
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)',
+          border: '1px solid rgba(255,255,255,0.15)',
+          color: '#fff', fontSize: 11, fontFamily: "'Space Mono', monospace",
+          letterSpacing: '0.15em', padding: '6px 12px', borderRadius: 999,
+        }}>
+          ▶ TAP TO PLAY
+        </span>
+      </div>
+
+      {/* ── THUMBNAIL OVERLAY ──────────────────────────────────────────────────
+          Sits above the iframe. Fades out ONLY after Vimeo fires its first
+          'play' postMessage event, meaning video is actually playing.
+          This completely hides the Vimeo loading spinner at all times.        */}
       <div
         style={{
-          display: 'flex',
-          width: 'max-content',
-          animation: `${id} ${speed}s linear infinite`,
-          animationPlayState: paused ? 'paused' : 'running',
-          willChange: 'transform',
+          position:      'absolute',
+          inset:          0,
+          zIndex:         10,
+          transition:    'opacity 0.4s ease',
+          opacity:        videoReady ? 0 : 1,
+          pointerEvents: 'none',
+          overflow:      'hidden',
         }}
       >
-        {doubled.map((item, i) => (
-          <StaticCard key={`${item.id}-${i}`} item={item} onOpen={onOpen} />
-        ))}
+        {/* ── SHIMMER SKELETON — visible while Vimeo API fetch is in-flight ── */}
+        <div
+          style={{
+            position:   'absolute',
+            inset:       0,
+            background: 'linear-gradient(110deg, #111 25%, #1e1e1e 50%, #111 75%)',
+            backgroundSize: '200% 100%',
+            animation:  thumbUrl ? 'none' : 'portfolio-shimmer 1.4s ease-in-out infinite',
+            opacity:    thumbUrl ? 0 : 1,
+            transition: 'opacity 0.3s ease',
+          }}
+        />
+
+        {/* ── REAL THUMBNAIL — crossfades in once the URL resolves ── */}
+        <img
+          src={thumbUrl || ''}
+          alt="Video thumbnail"
+          style={{
+            position:   'absolute',
+            inset:       0,
+            width:       '100%',
+            height:      '100%',
+            objectFit:  'cover',
+            display:    'block',
+            opacity:    thumbUrl ? 1 : 0,
+            transition: 'opacity 0.4s ease',
+          }}
+          onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
+        />
+
+        {/* Dark editorial tint */}
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.18)' }} />
       </div>
-      <style>{`
-        @keyframes smql { from { transform: translateX(0);    } to { transform: translateX(-50%); } }
-        @keyframes smqr { from { transform: translateX(-50%); } to { transform: translateX(0);    } }
-      `}</style>
-    </div>
+    </motion.div>
   );
 };
 
-// ── Portfolio Section ─────────────────────────────────────────────────────────
+// ── Section ────────────────────────────────────────────────────────────────────
 const PortfolioSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView   = useInView(sectionRef, { once: true,  margin: '-10%' });
-  const tabInView  = useInView(sectionRef, { once: false, margin: '0px'  }); // for pausing marquee
-  const [hovered, setHovered]     = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<'visual' | 'static'>('visual');
-  const [lightbox, setLightbox]   = useState<LightboxItem>(null);
-
-  const openLightbox = useCallback((p: typeof ROW1[0]) => {
-    setLightbox({ src: p.image, title: p.title, category: p.category, note: p.note });
-  }, []);
+  const sectionRef  = useRef<HTMLElement>(null);
+  const isInView    = useInView(sectionRef, { once: true, margin: '-10%' });
+  const [visibleCount, setVisibleCount] = useState(4);
 
   return (
     <section
@@ -174,66 +262,37 @@ const PortfolioSection = () => {
       className="py-20 sm:py-28 md:py-36 relative"
       style={{ backgroundColor: '#FFFFFF', color: '#111111' }}
     >
-      <Lightbox item={lightbox} onClose={() => setLightbox(null)} />
-
       <div className="w-full px-4 sm:px-8 lg:px-16" style={{ maxWidth: '1800px', margin: '0 auto' }}>
-        {/* Header */}
         <motion.div className="text-center" initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7 }}>
-          <h2 className="font-heading animate-text-rainbow" style={{ fontSize: 'clamp(5rem,14vw,200px)', lineHeight: 0.85, textShadow: '4px 4px 0px rgba(0,0,0,1)' }}>OUR WORK.</h2>
+          <h2 className="font-heading animate-text-rainbow mb-4" style={{ fontSize: 'clamp(5rem,14vw,200px)', lineHeight: 0.85, textShadow: '4px 4px 0px rgba(0,0,0,1)' }}>MY WORK.</h2>
         </motion.div>
-
-        {/* Tab Buttons */}
-        <motion.div className="flex justify-center mt-12 gap-4" initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.3 }}>
-          {(['visual', 'static'] as const).map((tab) => (
-            <button key={tab} onClick={() => setActiveTab(tab)}
-              className="font-mono text-[12px] tracking-[0.1em] uppercase px-8 py-3 rounded-full transition-all duration-300"
-              style={{ background: activeTab === tab ? '#111' : 'transparent', color: activeTab === tab ? '#fff' : '#111', border: '2px solid #111' }}>
-              {tab === 'visual' ? 'Visual Ads' : 'Static Ads'}
-            </button>
-          ))}
-        </motion.div>
-
-        {/* VISUAL ADS */}
-        {activeTab === 'visual' && (
-          <div className="mt-16 flex flex-col gap-12 w-full min-h-[1000px]">
-            {visualProjects.map((p, i) => (
-              <motion.div key={p.id} className="relative w-full rounded-xl overflow-hidden"
-                style={{ aspectRatio: '16/9', background: '#111', cursor: 'pointer' }}
-                initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: i * 0.1 }}
-                onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}>
-                <img src={p.image} alt={p.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500" style={{ transform: hovered === i ? 'scale(1.04)' : 'scale(1)' }} />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.82))' }} />
-                <div className="absolute top-4 left-4 z-10"><span style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'white', background: 'rgba(255,255,255,0.12)', padding: '5px 12px', borderRadius: 99, border: '1px solid rgba(255,255,255,0.2)' }}>{p.tag}</span></div>
-                <div className="absolute top-4 right-4 z-10"><div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ border: '1.5px solid rgba(255,255,255,0.5)', background: hovered === i ? 'white' : 'rgba(0,0,0,0.3)' }}><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ marginLeft: 2 }}><polygon points="3,2 10,6 3,10" fill={hovered === i ? '#000' : 'white'} /></svg></div></div>
-                <div className="absolute bottom-0 left-0 right-0 z-10 p-6">
-                  <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.12em', opacity: 0.55, color: 'white', display: 'block' }}>{p.category}</span>
-                  <h3 className="font-heading text-white mt-1" style={{ fontSize: 28 }}>{p.title}</h3>
-                  <div style={{ maxHeight: hovered === i ? 60 : 0, overflow: 'hidden', transition: 'max-height 0.4s ease', fontFamily: "'DM Sans',sans-serif", fontStyle: 'italic', fontSize: 13, color: 'rgba(255,255,255,0.75)', marginTop: 6 }}>{p.note}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
       </div>
 
-      {/* STATIC ADS — three scrolling marquee rows, tight gap */}
-      {activeTab === 'static' && (
-        <motion.div
-          className="mt-16"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          style={{ backgroundColor: '#0a0a0a', paddingTop: 24, paddingBottom: 24 }}
-        >
-          {/* Full-bleed strip — three rows */}
-          <div style={{ position: 'relative', left: '50%', transform: 'translateX(-50%)', width: '100vw', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <MarqueeRow items={ROW1} direction="right" speed={50} paused={!tabInView} onOpen={openLightbox} />
-            <MarqueeRow items={ROW2} direction="left" speed={45} paused={!tabInView} onOpen={openLightbox} />
-            <MarqueeRow items={ROW3} direction="right" speed={55} paused={!tabInView} onOpen={openLightbox} />
-          </div>
-        </motion.div>
-      )}
+      <div
+        className="w-full px-4 sm:px-8 lg:px-16 mx-auto"
+        style={{ maxWidth: '1700px', display: 'flex', flexDirection: 'column', gap: 64, paddingTop: 64, paddingBottom: 48 }}
+      >
+        {visualProjects.slice(0, visibleCount).map((p, i) => (
+          <VideoCard key={p.id} project={p} index={i} />
+        ))}
 
+        {visibleCount < visualProjects.length && (
+          <motion.div
+            className="flex justify-center mt-4"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <button
+              onClick={() => setVisibleCount(visualProjects.length)}
+              className="btn-3d btn-3d-yellow px-14 py-6 font-heading tracking-widest flex items-center justify-center cursor-pointer"
+              style={{ fontSize: '1.5rem' }}
+            >
+              VIEW MORE
+            </button>
+          </motion.div>
+        )}
+      </div>
     </section>
   );
 };

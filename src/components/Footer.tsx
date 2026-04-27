@@ -1,10 +1,10 @@
 import { useRef } from 'react';
-import { Twitter, Instagram, Linkedin, Youtube, ArrowUp } from 'lucide-react';
+import { Linkedin, ArrowUp } from 'lucide-react';
 import { useInView } from 'framer-motion';
 
 const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
-  const isInView  = useInView(footerRef, { once: false, margin: "0px" });
+  const isInView = useInView(footerRef, { once: false, margin: "0px" });
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -27,36 +27,34 @@ const Footer = () => {
           }
         `}
       </style>
-      {/* ── Giant Outline Text with Flawless Sweep ── */}
+      {/* ── Giant Outline Text with Warm Orange Sweep ── */}
       <div
         className="w-full h-[300px] flex-1 flex justify-center items-center flex-col px-4 mb-8 overflow-hidden"
         aria-hidden
       >
-        {/* Base Transparent Outline Text with Sweeping Glassy Gradient */}
         <div
           className="inline-block relative w-[200vw] sm:w-[150vw] md:w-full text-center"
           style={{
             fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 'clamp(60px, 16vw, 300px)',
-            WebkitTextStroke: '2px rgba(17,17,17,0.85)', /* Dark crisp stroke */
+            fontSize: 'clamp(50px, 14vw, 260px)',
+            WebkitTextStroke: '2px rgba(17,17,17,0.85)',
             color: 'transparent',
             whiteSpace: 'nowrap',
-            letterSpacing: '0.04em',
+            letterSpacing: '0.05em',
             userSelect: 'none',
             lineHeight: 1.1,
             zIndex: 1,
-            // Glassy maroon sweep: transparent sides, sharp thick red center
-            backgroundImage: 'linear-gradient(100deg, transparent 0%, transparent 35%, rgba(139,0,0,0.9) 48%, rgba(139,0,0,0.9) 52%, transparent 65%, transparent 100%)',
+            // Warm maroon sweep
+            backgroundImage: 'linear-gradient(100deg, transparent 0%, transparent 35%, rgba(128,0,0,0.9) 48%, rgba(128,0,0,0.9) 52%, transparent 65%, transparent 100%)',
             backgroundSize: '200% auto',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            // Linear, infinite, 8 seconds for a steady, hypnotic pass across the massive text without stopping
             animation: 'sweepContinuous 8s linear infinite',
             animationPlayState: isInView ? 'running' : 'paused',
             willChange: 'background-position',
           }}
         >
-          OPERA CREATIVES
+          POWERED BY GEN AI
         </div>
       </div>
 
@@ -67,30 +65,41 @@ const Footer = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           {/* Copyright */}
           <div className="font-mono text-[11px] tracking-[0.1em] text-[#333] uppercase font-bold">
-            &copy; 2026 Opera Creatives. All rights reserved.
+            &copy; 2026 Kshitij Satbhai. All rights reserved.
           </div>
 
           <div className="flex items-center gap-12">
             {/* Social Icons */}
             <div className="flex items-center gap-6">
               {[
-                { Icon: Instagram, href: 'https://instagram.com/operacreatives_',          label: 'Instagram' },
-                { Icon: Linkedin,  href: 'https://linkedin.com/company/operacreatives',    label: 'LinkedIn'  },
-                { Icon: Twitter,   href: 'https://x.com/operacreatives_',                 label: 'X / Twitter' },
-                { Icon: Youtube,   href: 'https://youtube.com/@operacreatives',            label: 'YouTube'   },
-              ].map(({ Icon, href, label }) => (
+                { label: 'X',        href: 'https://x.com/aiuncover' },
+                { label: 'LinkedIn', href: 'https://www.linkedin.com/in/kshitijsatbhai/' },
+              ].map(({ href, label }) => (
                 <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                   aria-label={label}
-                   className="text-[#333] hover:text-[#8B0000] transition-colors">
-                  <Icon strokeWidth={2} size={18} />
+                  aria-label={label}
+                  className="text-[#333] hover:text-[#F48B29] transition-colors">
+                  {label === 'X' ? (
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden>
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                  ) : (
+                    <Linkedin strokeWidth={2} size={18} />
+                  )}
                 </a>
               ))}
             </div>
+            {/* Email */}
+            <a
+              href="mailto:contactshitij7@gmail.com"
+              className="font-mono text-[11px] tracking-[0.05em] text-[#333] hover:text-[#F48B29] transition-colors"
+            >
+              contactshitij7@gmail.com
+            </a>
 
             {/* Back to top button */}
             <button
               onClick={scrollToTop}
-              className="w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center text-[#111] hover:text-white hover:bg-[#8B0000] transition-colors shadow-sm cursor-pointer"
+              className="w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center text-[#111] hover:text-white hover:bg-[#F48B29] transition-colors shadow-sm cursor-pointer"
               aria-label="Back to top"
             >
               <ArrowUp size={16} strokeWidth={2} />

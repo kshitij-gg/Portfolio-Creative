@@ -676,7 +676,7 @@ const MoreWork = () => {
             </span>
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/15 pb-8 md:pb-12">
               <h1 className="font-heading text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] leading-[0.85] uppercase tracking-tight">
-                OUR WORK
+                MY WORK
               </h1>
               <p className="max-w-xs text-white/50 text-sm font-mono leading-relaxed mb-2">
                 Cutting-edge AI commercial and cinematic productions.

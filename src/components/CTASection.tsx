@@ -77,7 +77,7 @@ const CTASection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.2 }}
         >
-          Your vision + our AI craft — let's bring it to life.
+          Your vision + my AI craft — let's bring it to life.
         </motion.p>
 
         {/* CTA Button — Book a Call via Calendly */}

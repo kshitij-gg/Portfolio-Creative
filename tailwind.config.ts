@@ -17,10 +17,12 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["'Bebas Neue'", "sans-serif"],
-        body:    ["'DM Sans'", "sans-serif"],
-        mono:    ["'Space Mono'", "monospace"],
-        sans:    ["'DM Sans'", "sans-serif"],
+        heading:     ["'Bebas Neue'", "sans-serif"],
+        body:        ["'Inter'", "'Outfit'", "sans-serif"],
+        mono:        ["'Space Mono'", "monospace"],
+        sans:        ["'Inter'", "'Outfit'", "sans-serif"],
+        handwritten: ["'Permanent Marker'", "cursive"],
+        inter:       ["'Inter'", "sans-serif"],
       },
       colors: {
         border:     "hsl(var(--border))",
@@ -56,12 +58,13 @@ export default {
           DEFAULT:    "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Opera Act palette
-        opera: {
-          red:    "#FF4B6E",
-          orange: "#FF6B35",
-          mint:   "#06D6A0",
-          yellow: "#FFE566",
+        // Kshitij Satbhai accent palette
+        ks: {
+          orange: "#F48B29",
+          green:  "#8CDAA6",
+          blue:   "#4FC3F7",
+          pink:   "#F472B6",
+          yellow: "#FFE066",
           cream:  "#F5F0E8",
         },
       },

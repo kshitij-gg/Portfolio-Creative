@@ -100,7 +100,7 @@ const ShowreelSection = () => {
       {/* Bottom fade → red */}
       <div
         className="absolute bottom-0 left-0 right-0 h-[120px] pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, transparent, #FF4B6E)' }}
+        style={{ background: 'linear-gradient(to bottom, transparent, #F48B29)' }}
       />
     </section>
   );

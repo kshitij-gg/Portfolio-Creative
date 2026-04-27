@@ -3,91 +3,242 @@
 @tailwind utilities;
 
 /* ══════════════════════════════════════════════════════════════
-   OPERA CREATIVES v3 — THEATRICAL INSTRUMENT DESIGN SYSTEM
-   Color Journey: Black → Crimson Red → Sky Blue / Mint / Lime / Yellow → White → Tangerine → Yellow → Cream
-   GSAP ScrollTrigger drives body background morphing
+   KSHITIJ SATBHAI — PERSONAL PORTFOLIO DESIGN SYSTEM
+   Original fonts: Bebas Neue (heading) + Inter/Outfit (body)
+   Accent palette: orange, green, blue, pink, yellow
+   3D skeuomorphic buttons throughout
    ══════════════════════════════════════════════════════════════ */
 
 @layer base {
   :root {
-    /* ── Opera Color Palette ── */
-    --opera-black:     #000000;
-    --opera-red:       #FF4B6E;
-    --opera-skyblue:   #4FC3F7;
-    --opera-mint:      #4DD0AA;
-    --opera-lime:      #C5E063;
-    --opera-yellow:    #FFE066;
-    --opera-white:     #FFFFFF;
-    --opera-tangerine: #FFB347;
-    --opera-cream:     #F5F0E8;
+    --ks-black: #050505;
+    --ks-deep: #0E0E0E;
+    --ks-charcoal: #1A1A1A;
+    --ks-white: #F5F0E8;
 
-    /* ── Shadcn tokens ── */
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 0 0% 100%;
+    --accent-orange: #F48B29;
+    --accent-green: #8CDAA6;
+    --accent-blue: #4FC3F7;
+    --accent-pink: #F472B6;
+    --accent-yellow: #FFE066;
+
+    --background: 0 0% 5%;
+    --foreground: 36 33% 93%;
+    --card: 0 0% 7%;
+    --card-foreground: 36 33% 93%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 36 33% 93%;
+    --primary: 36 33% 93%;
     --primary-foreground: 0 0% 0%;
     --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 350 100% 65%;
-    --accent-foreground: 0 0% 100%;
+    --secondary-foreground: 36 33% 93%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 30 90% 54%;
+    --accent-foreground: 36 33% 93%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 100% / 0.1;
-    --input: 0 0% 15%;
-    --ring: 350 100% 65%;
+    --destructive-foreground: 36 33% 93%;
+    --border: 0 0% 100% / 0.08;
+    --input: 0 0% 14%;
+    --ring: 30 90% 54%;
     --radius: 0.375rem;
   }
 }
 
 @layer base {
-  * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+  }
 
   html {
-    /* scroll-behavior: smooth — intentionally REMOVED: Lenis handles this */
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
-  ::-webkit-scrollbar { display: none; }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   body {
-    font-family: 'DM Sans', sans-serif;
-    background-color: #000000;
-    color: #ffffff;
-    /* NOTE: NO CSS transition here — GSAP ScrollTrigger scrubs backgroundColor directly */
+    /* ── FONT RESTORED: original Inter/Outfit body font ── */
+    font-family: 'Inter', 'Outfit', sans-serif;
+    background-color: var(--ks-deep);
+    color: var(--ks-white);
     -webkit-font-smoothing: antialiased;
-    cursor: default !important;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    /* ── FONT RESTORED: original Bebas Neue heading font ── */
     font-family: 'Bebas Neue', sans-serif;
     font-weight: 400;
-    letter-spacing: 0.02em;
-    line-height: 0.93;
+    letter-spacing: 0.03em;
+    line-height: 0.95;
   }
 
-  ::selection { background: #FF4B6E; color: #fff; }
+  ::selection {
+    background: var(--accent-orange);
+    color: #fff;
+  }
+}
 
-  * { cursor: default !important; }
-  a, button, [role="button"] { cursor: pointer !important; }
+/* ══════════════════════════════════════════════════════════════
+   MESH GRADIENT CANVAS
+   ══════════════════════════════════════════════════════════════ */
+#mesh-gradient-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mesh-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.mesh-orb-1 {
+  width: 70vw;
+  height: 70vw;
+  background: radial-gradient(circle, rgba(244, 139, 41, 0.16) 0%, transparent 70%);
+  top: -20vw;
+  left: -20vw;
+  animation: orbFloat1 18s ease-in-out infinite alternate;
+}
+
+.mesh-orb-2 {
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(circle, rgba(255, 224, 102, 0.10) 0%, transparent 70%);
+  top: 30vh;
+  right: -15vw;
+  animation: orbFloat2 22s ease-in-out infinite alternate;
+}
+
+.mesh-orb-3 {
+  width: 45vw;
+  height: 45vw;
+  background: radial-gradient(circle, rgba(79, 195, 247, 0.10) 0%, transparent 70%);
+  bottom: -10vw;
+  left: 20vw;
+  animation: orbFloat3 26s ease-in-out infinite alternate;
+}
+
+.mesh-orb-4 {
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, rgba(140, 218, 166, 0.07) 0%, transparent 70%);
+  bottom: 20vh;
+  right: 10vw;
+  animation: orbFloat4 20s ease-in-out infinite alternate;
+}
+
+@keyframes orbFloat1 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate3d(8vw, 12vh, 0) scale(1.1);
+  }
+
+  66% {
+    transform: translate3d(-4vw, 20vh, 0) scale(0.95);
+  }
+
+  100% {
+    transform: translate3d(5vw, 8vh, 0) scale(1.05);
+  }
+}
+
+@keyframes orbFloat2 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-10vw, 15vh, 0) scale(1.15);
+  }
+
+  100% {
+    transform: translate3d(-5vw, -5vh, 0) scale(0.9);
+  }
+}
+
+@keyframes orbFloat3 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  40% {
+    transform: translate3d(8vw, -8vh, 0) scale(1.2);
+  }
+
+  100% {
+    transform: translate3d(-6vw, 5vh, 0) scale(0.95);
+  }
+}
+
+@keyframes orbFloat4 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  60% {
+    transform: translate3d(-8vw, -12vh, 0) scale(1.1);
+  }
+
+  100% {
+    transform: translate3d(5vw, 8vh, 0) scale(1.05);
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
    UTILITIES
    ══════════════════════════════════════════════════════════════ */
 @layer utilities {
+  .font-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+  }
 
-  /* ── Typography helpers ── */
-  .font-heading { font-family: 'Bebas Neue', sans-serif; font-weight: 400; letter-spacing: 0.02em; }
-  .font-body    { font-family: 'DM Sans', sans-serif; }
-  .font-mono    { font-family: 'Space Mono', monospace; }
+  .font-body {
+    font-family: 'Inter', 'Outfit', sans-serif;
+  }
 
-  /* ── Pill buttons ── */
+  .font-mono {
+    font-family: 'Space Mono', monospace;
+  }
+
+  .font-handwritten {
+    font-family: 'Permanent Marker', cursive;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
   .pill-btn {
     display: inline-flex;
     align-items: center;
@@ -101,59 +252,49 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     background: transparent;
-    cursor: pointer !important;
     transition: background-color 0.22s ease, color 0.22s ease, transform 0.15s ease;
     text-decoration: none;
     line-height: 1;
   }
-  .pill-btn:hover { transform: scale(1.03); }
 
-  /* ── Instrument stat card ── */
-  .instrument-card {
-    background: #1a0008;
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
-    padding: 28px 20px 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 340px;
+  .pill-btn:hover {
+    transform: scale(1.03);
   }
 
-  /* ── Work card hover ── */
   .work-card .director-note {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     padding: 12px 16px;
-    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
     transform: translateY(100%);
     opacity: 0;
     transition: all 0.35s ease;
-    font-family: 'DM Sans';
+    font-family: 'Inter', sans-serif;
     font-style: italic;
     font-size: 13px;
     color: white;
   }
+
   .work-card:hover .director-note {
     transform: translateY(0);
     opacity: 1;
   }
+
   .work-card:hover {
     transform: scale(1.02);
     transition: transform 0.3s ease;
   }
 
-  /* ── Segmented filter (Our Work) ── */
   .seg-group {
     display: inline-flex;
     border-radius: 99px;
     overflow: hidden;
     border: 1px solid currentColor;
   }
-  .seg-group > button {
+
+  .seg-group>button {
     padding: 9px 18px;
     font-family: 'Space Mono', monospace;
     font-size: 10px;
@@ -161,222 +302,477 @@
     letter-spacing: 0.1em;
     background: transparent;
     border: none;
-    cursor: pointer !important;
     transition: background-color 0.2s, color 0.2s;
     border-right: 1px solid currentColor;
     line-height: 1;
   }
-  .seg-group > button:last-child { border-right: none; }
-  .seg-group > button.active { background-color: currentColor; }
 
-  /* ── BOOK A SCENE CTA ── */
+  .seg-group>button:last-child {
+    border-right: none;
+  }
+
+  .seg-group>button.active {
+    background-color: currentColor;
+  }
+
   .cta-book {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: #1a1200;
-    color: #FFE066;
-    border: none;
+    background: rgba(26, 18, 0, 0.8);
+    color: var(--accent-yellow);
+    border: 1px solid rgba(255, 224, 102, 0.2);
     border-radius: 99px;
     padding: 18px 36px;
     font-family: 'Space Mono', monospace;
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    cursor: pointer !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 224, 102, 0.1);
+    backdrop-filter: blur(12px);
     transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   }
-  .cta-book:hover {
-    background: #FFFFFF;
-    color: #1a1200;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-  }
-  .cta-book:active { transform: scale(0.97) !important; }
-  .cta-book:active .bow-icon { animation: bow-click 0.3s ease; }
 
-  /* ── Social instrument pill ── */
+  .cta-book:hover {
+    background: var(--accent-yellow);
+    color: #0a0a0a;
+    box-shadow: 0 12px 48px rgba(255, 224, 102, 0.25);
+    transform: translateY(-2px);
+  }
+
+  .cta-book:active {
+    transform: scale(0.97) !important;
+  }
+
   .social-pill {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    border: 1.5px solid #1a1200;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 99px;
     padding: 10px 20px;
     font-family: 'Space Mono', monospace;
     font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #1a1200;
-    background: transparent;
-    cursor: pointer !important;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.04);
     transition: all 0.25s ease;
     text-decoration: none;
   }
-  .social-pill:hover { background: #1a1200; color: #FFE066; }
 
-  /* ── Clapperboard flap ── */
-  .clapper-flap-anim { animation: clapperSnap 2.8s ease-in-out infinite; }
+  .social-pill:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
 
-  /* ── Metronome ── */
-  .metronome-arm { animation: metronome 1.4s ease-in-out infinite; transform-origin: top center; }
-
-  /* ── Musical note float ── */
-  .note-float-1 { animation: noteFloat 2s ease-in 0s infinite; }
-  .note-float-2 { animation: noteFloat 2s ease-in 0.6s infinite; }
-  .note-float-3 { animation: noteFloat 2s ease-in 1.2s infinite; }
+  .text-shimmer {
+    background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.6) 40%, #fff 60%, rgba(255, 255, 255, 0.6) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textShimmer 4s linear infinite;
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
    KEYFRAMES
    ══════════════════════════════════════════════════════════════ */
-
-/* Guitar floating */
 @keyframes guitarFloat {
-  0%, 100% { transform: translateX(-50%) translateY(0px) rotate(-6deg); }
-  50%       { transform: translateX(-50%) translateY(-8px) rotate(-6deg); }
+
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0px) rotate(-6deg);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-8px) rotate(-6deg);
+  }
 }
 
-/* Guitar string vibration */
 @keyframes stringVibe {
-  0%, 100% { transform: scaleX(1); opacity: 0.6; }
-  50%       { opacity: 1; }
+
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
-/* Violin bow sweep */
-@keyframes bowSweep {
-  0%   { transform: translate(-50%, -50%) translateX(-22px) rotate(-5deg); }
-  50%  { transform: translate(-50%, -50%) translateX(22px) rotate(5deg); }
-  100% { transform: translate(-50%, -50%) translateX(-22px) rotate(-5deg); }
-}
-
-/* Bow click (on CTA click) */
-@keyframes bow-click {
-  0%   { transform: rotate(0deg); }
-  50%  { transform: rotate(20deg); }
-  100% { transform: rotate(0deg); }
-}
-
-/* Navbar bow strum */
-@keyframes bow-strum {
-  0%   { transform: rotate(0deg); }
-  25%  { transform: rotate(-8deg); }
-  75%  { transform: rotate(8deg); }
-  100% { transform: rotate(0deg); }
-}
-.bow-strum { animation: bow-strum 0.3s ease; }
-
-/* Clapperboard snap */
-@keyframes clapperSnap {
-  0%, 70%, 100% { transform: rotateX(0deg); }
-  80%            { transform: rotateX(-40deg); }
-}
-
-/* Musical notes float up */
-@keyframes noteFloat {
-  0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(-60px) rotate(15deg); opacity: 0; }
-}
-
-/* Metronome */
-@keyframes metronome {
-  0%, 100% { transform: rotate(-35deg); }
-  50%       { transform: rotate(35deg); }
-}
-
-/* Music note scroll bob */
-@keyframes noteBob {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(5px); }
-}
-
-/* Circle pulse */
-@keyframes circlePulse {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.08); }
-}
-
-/* Marquee */
 @keyframes marquee-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
-/* Bow strum (navbar contact button + collaborate CTA) */
-@keyframes bowStrum {
-  0%   { transform: rotate(0deg) translateX(0); }
-  25%  { transform: rotate(12deg) translateX(2px); }
-  75%  { transform: rotate(-6deg) translateX(-1px); }
-  100% { transform: rotate(0deg) translateX(0); }
-}
-
-/* Fade up entrance */
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Footer watermark light sweep */
-@keyframes letterSweep {
-  0%   { background-position: 150% 0; }
-  100% { background-position: -50% 0; }
+@keyframes sweepContinuous {
+  0% {
+    background-position: 200% center;
+  }
+
+  100% {
+    background-position: 0% center;
+  }
 }
 
-/* Instrument canvas */
-.instrument-canvas {
-  display: block;
-  width: 200px;
-  height: 200px;
+@keyframes textShimmer {
+  0% {
+    background-position: 200% center;
+  }
+
+  100% {
+    background-position: 0% center;
+  }
 }
 
-/* Accordion (radix) */
+@keyframes noteBob {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@keyframes circlePulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+}
+
 @keyframes accordion-down {
-  from { height: 0; }
-  to   { height: var(--radix-accordion-content-height); }
+  from {
+    height: 0;
+  }
+
+  to {
+    height: var(--radix-accordion-content-height);
+  }
 }
+
 @keyframes accordion-up {
-  from { height: var(--radix-accordion-content-height); }
-  to   { height: 0; }
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+
+  to {
+    height: 0;
+  }
 }
 
-/* Premium Opera 3D Buttons (Piano Key / Stage Ticket style) */
-.btn-3d {
-  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-  box-shadow: 0px 6px 0px rgba(0, 0, 0, 0.8), 0px 10px 15px rgba(0, 0, 0, 0.4);
-  transform: translateY(0px);
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.btn-3d-light {
-  box-shadow: 0px 6px 0px rgba(200, 200, 200, 0.8), 0px 10px 15px rgba(0, 0, 0, 0.1);
-}
-.btn-3d:active {
-  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.8), 0px 2px 5px rgba(0, 0, 0, 0.4) !important;
-  transform: translateY(5px) !important;
-}
-.btn-3d:hover {
-  filter: brightness(1.15);
-}
-/* Refined colors fitting an Opera (Deep Red, Rich Gold, Piano Black, Pearl White) */
-.btn-3d-red { background: linear-gradient(145deg, #8B0000, #5c0000); border-color: #330000; color: #fff; }
-.btn-3d-gold { background: linear-gradient(145deg, #D4AF37, #AA8C2C); border-color: #886C1D; color: #111; }
-.btn-3d-pearl { background: linear-gradient(145deg, #FFFFFF, #E8E8E8); border-color: #CCC; color: #111; }
-.btn-3d-black { background: linear-gradient(145deg, #222222, #000000); border-color: #111; color: #fff; }
-.btn-3d-glass { background-color: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); color: #fff; box-shadow: 0px 6px 0px rgba(0,0,0,0.5), 0px 8px 20px rgba(0,0,0,0.3); }
+@keyframes static-marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
 
-/* ── Performance: isolate section repaints ── */
-section {
-  contain: paint;    /* browser won't repaint outside section boundaries */
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
-/* Color Wheel Text Animation */
+@keyframes letterSweep {
+  0% {
+    background-position: 150% 0;
+  }
+
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+/* Portfolio video card skeleton shimmer */
+@keyframes portfolio-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 @keyframes textRainbow {
-  0%   { color: #FF4B6E; }
-  20%  { color: #FFB347; }
-  40%  { color: #FFE066; }
-  60%  { color: #4DD0AA; }
-  80%  { color: #4FC3F7; }
-  100% { color: #FF4B6E; }
+  0% {
+    color: #F48B29;
+  }
+
+  20% {
+    color: #8CDAA6;
+  }
+
+  40% {
+    color: #4FC3F7;
+  }
+
+  60% {
+    color: #F472B6;
+  }
+
+  80% {
+    color: #FFE066;
+  }
+
+  100% {
+    color: #F48B29;
+  }
 }
+
 .animate-text-rainbow {
   animation: textRainbow 10s linear infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3D SKEUOMORPHIC BUTTON SYSTEM
+   Matches reference: chunky rounded, extruded bottom edge,
+   lighter top face gradient, snappy 80-90ms press animation.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Base 3D Button ── */
+.btn-3d {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  /* Square-ish keyboard key */
+  padding: 14px 28px;
+  /* Wider padding, more height */
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  /* Slightly larger text */
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  line-height: 1;
+  transform: translateY(0px);
+  transition: transform 90ms ease-out, box-shadow 90ms ease-out, filter 90ms ease-out;
+  user-select: none;
+}
+
+/* Press animation — face drops, edge shrinks */
+.btn-3d:active {
+  transform: translateY(6px) !important;
+  transition: transform 80ms ease-out, box-shadow 80ms ease-out !important;
+}
+
+/* ── Orange (primary CTA) ── */
+.btn-3d-orange {
+  background: #F48B29;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.2),
+    /* Top highlight */
+    0 8px 0 #9E4D0A,
+    /* Extruded edge */
+    0 10px 14px rgba(0, 0, 0, 0.4);
+  color: #fff;
+}
+
+.btn-3d-orange:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.2), 0 9px 0 #9E4D0A, 0 12px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-3d-orange:active {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 0 #9E4D0A, 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ── Green ── */
+.btn-3d-green {
+  background: #8CDAA6;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.4),
+    0 8px 0 #3BA86A,
+    0 10px 14px rgba(0, 0, 0, 0.35);
+  color: #0a2e1a;
+}
+
+.btn-3d-green:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.4), 0 9px 0 #3BA86A, 0 12px 20px rgba(0, 0, 0, 0.35);
+}
+
+.btn-3d-green:active {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 0 #3BA86A, 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ── Blue ── */
+.btn-3d-blue {
+  background: #4FC3F7;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.3),
+    0 8px 0 #0F6FA0,
+    0 10px 14px rgba(0, 0, 0, 0.35);
+  color: #012a40;
+}
+
+.btn-3d-blue:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3), 0 9px 0 #0F6FA0, 0 12px 20px rgba(0, 0, 0, 0.35);
+}
+
+.btn-3d-blue:active {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 0 #0F6FA0, 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ── Light Blue ── */
+.btn-3d-lightblue {
+  background: #0CE0FF;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.6),
+    0 8px 0 #009EBA,
+    0 10px 14px rgba(12, 224, 255, 0.25);
+  color: #01333F;
+}
+
+.btn-3d-lightblue:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.7), 0 9px 0 #009EBA, 0 12px 24px rgba(12, 224, 255, 0.4);
+}
+
+.btn-3d-lightblue:active {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 2px 0 #009EBA, 0 2px 6px rgba(12, 224, 255, 0.35) !important;
+}
+
+/* ── Pink ── */
+.btn-3d-pink {
+  background: #FF1E8F;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.5),
+    0 8px 0 #BA005A,
+    0 10px 14px rgba(255, 30, 143, 0.25);
+  color: #fff;
+}
+
+.btn-3d-pink:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.6), 0 9px 0 #BA005A, 0 12px 24px rgba(255, 30, 143, 0.4);
+}
+
+.btn-3d-pink:active {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 0 #BA005A, 0 2px 6px rgba(255, 30, 143, 0.35) !important;
+}
+
+/* ── Yellow ── */
+.btn-3d-yellow {
+  background: #FFED00;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.8),
+    0 8px 0 #B8A900,
+    0 10px 14px rgba(255, 237, 0, 0.2);
+  color: #2E2A00;
+}
+
+.btn-3d-yellow:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.9), 0 9px 0 #B8A900, 0 12px 24px rgba(255, 237, 0, 0.35);
+}
+
+.btn-3d-yellow:active {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 2px 0 #B8A900, 0 2px 6px rgba(255, 237, 0, 0.3) !important;
+}
+
+/* ── Pearl / white (navbar links, ghost) ── */
+.btn-3d-pearl {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.1),
+    0 8px 0 rgba(0, 0, 0, 0.5),
+    0 10px 14px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.btn-3d-pearl:hover {
+  filter: brightness(1.2);
+  transform: translateY(-1px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.12), 0 9px 0 rgba(0, 0, 0, 0.5), 0 12px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-3d-pearl:active {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 0 rgba(0, 0, 0, 0.6), 0 2px 5px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ── Dark glass ── */
+.btn-3d-dark {
+  background: #1A1A1A;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.1),
+    0 8px 0 #000,
+    0 10px 14px rgba(0, 0, 0, 0.5);
+  color: #fff;
+}
+
+.btn-3d-dark:hover {
+  filter: brightness(1.2);
+  transform: translateY(-1px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 9px 0 #000, 0 12px 20px rgba(0, 0, 0, 0.5);
+}
+
+.btn-3d-dark:active {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 0 #000, 0 2px 5px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Utility: freeze all descendant CSS animations when section is off-screen */
+.animations-paused *,
+.animations-paused {
+  animation-play-state: paused !important;
+}
+
+section {
+  contain: paint;
+  position: relative;
+  z-index: 1;
+}
+
+/* Mobile hamburger menu  */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.92);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.glow-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(244, 139, 41, 0.6) 30%, rgba(244, 139, 41, 0.8) 50%, rgba(244, 139, 41, 0.6) 70%, transparent 100%);
 }

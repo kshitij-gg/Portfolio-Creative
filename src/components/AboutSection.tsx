@@ -1,272 +1,88 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Folder, Briefcase } from 'lucide-react';
 
-/* ─── Animated SVG: The Creator Workstation ─── */
-const CreatorStationSVG = ({ isAnimating }: { isAnimating: boolean }) => {
-  const animState = isAnimating ? 'running' : 'paused';
+// SVG: A guy handling multiple screens, working with ease, relaxing.
+const MultiScreenMaestroSVG = ({ className }: { className?: string }) => (
+  <img 
+    src="/creator-silhouette.png" 
+    alt="Creator Silhouette" 
+    className={`w-full h-auto max-w-sm mx-auto object-contain ${className || ''}`}
+    style={{ filter: "drop-shadow(0px 20px 40px rgba(0,0,0,0.15))" }}
+  />
+);
 
-  // Over a hot pink background, using stark contrast:
-  // Black, White, Yellow (#FFE066), and Cyan glow (#00E5FF)
-
-  return (
-    <div className="relative w-full h-[500px] sm:h-[600px] flex items-end justify-center overflow-hidden">
-      <style>{`
-        @keyframes headBob {
-          0%, 100% { transform: rotate(0deg) translateY(0px); }
-          50% { transform: rotate(3deg) translateY(-4px); }
-        }
-        @keyframes typingLeft {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          25% { transform: translateY(-3px) rotate(-2deg); }
-          75% { transform: translateY(2px) rotate(1deg); }
-        }
-        @keyframes typingRight {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          30% { transform: translateY(3px) rotate(2deg); }
-          60% { transform: translateY(-4px) rotate(-1deg); }
-        }
-        @keyframes screenFlicker {
-          0%, 100% { opacity: 0.85; }
-          40% { opacity: 1; }
-          80% { opacity: 0.9; }
-        }
-        @keyframes dataFlow {
-          0% { transform: translateY(0); }
-          100% { transform: translateY(-20px); }
-        }
-      `}</style>
-      
-      <svg viewBox="0 0 1000 600" className="w-full h-full" preserveAspectRatio="xMidYMax meet">
-        
-        {/* BACKGROUND GLOW / TECH ELEMENTS */}
-        <g opacity="0.3">
-           {/* Abstract massive glowing circle */}
-           <circle cx="500" cy="300" r="250" fill="url(#bgGlow)" />
-           {/* Floating code/render boxes */}
-           <rect x="200" y="150" width="100" height="80" rx="4" fill="none" stroke="#fff" strokeWidth="2" strokeDasharray="5 5" />
-           <rect x="750" y="250" width="120" height="150" rx="4" fill="none" stroke="#FFE066" strokeWidth="2" />
-        </g>
-
-        {/* DEFINITIONS for gradients */}
-        <defs>
-          <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#fff" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#fff" stopOpacity="0" />
-          </radialGradient>
-          <linearGradient id="screenGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#0a0a0a" />
-            <stop offset="100%" stopColor="#1a1a1a" />
-          </linearGradient>
-        </defs>
-
-        {/* DESK MASSIVE SLAB */}
-        <path d="M 50 540 L 950 540 L 1000 600 L 0 600 Z" fill="#111" stroke="#000" strokeWidth="6" />
-        {/* Desk edge highlight */}
-        <path d="M 50 540 L 950 540" stroke="#FFE066" strokeWidth="3" />
-
-        {/* CHAIR (Backrest) */}
-        <path d="M 450 470 L 440 250 Q 500 230 560 250 L 550 470 Z" fill="#1a1a1a" stroke="#000" strokeWidth="5" />
-        {/* Chair Headrest */}
-        <rect x="470" y="200" width="60" height="30" rx="8" fill="#111" stroke="#000" strokeWidth="4" />
-
-        {/* CHARCTER BODY */}
-        {/* Torso */}
-        <path d="M 460 470 L 470 320 C 470 290 530 290 530 320 L 540 470 Z" fill="#F8F4EC" stroke="#000" strokeWidth="5" />
-        {/* Neck */}
-        <rect x="490" y="295" width="20" height="30" fill="#FFE066" stroke="#000" strokeWidth="4" />
-
-        {/* HEAD GROUP (Animated Bob to music) */}
-        <g style={{ animation: 'headBob 4s ease-in-out infinite', animationPlayState: animState, transformOrigin: '500px 300px' }}>
-          {/* Head base */}
-          <rect x="470" y="240" width="60" height="65" rx="16" fill="#F8F4EC" stroke="#000" strokeWidth="5" />
-          {/* Cool futuristic shading / visor */}
-          <rect x="465" y="255" width="70" height="30" rx="8" fill="#111" />
-          {/* Glowing Eyes/Display on visor */}
-          <g style={{ animation: 'screenFlicker 3s infinite', animationPlayState: animState }}>
-            <circle cx="490" cy="270" r="5" fill="#00E5FF" />
-            <circle cx="515" cy="270" r="5" fill="#00E5FF" />
-            <rect x="485" y="268" width="35" height="4" fill="#00E5FF" opacity="0.4" />
-          </g>
-          {/* Headphones */}
-          <path d="M 460 270 C 460 220 540 220 540 270" fill="none" stroke="#FFE066" strokeWidth="8" strokeLinecap="round" />
-          <rect x="450" y="260" width="16" height="40" rx="6" fill="#111" stroke="#000" strokeWidth="3" />
-          <rect x="534" y="260" width="16" height="40" rx="6" fill="#111" stroke="#000" strokeWidth="3" />
-        </g>
-
-        {/* LEFT ARM (Animated Typing) */}
-        <g style={{ animation: 'typingLeft 0.6s linear infinite', animationPlayState: animState, transformOrigin: '470px 350px' }}>
-          <path d="M 475 330 Q 410 400 410 480 L 440 528" fill="none" stroke="#F8F4EC" strokeWidth="22" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M 475 330 Q 410 400 410 480 L 440 528" fill="none" stroke="#000" strokeWidth="28" strokeLinecap="round" strokeLinejoin="round" style={{ mixBlendMode: 'destination-over' as any }} />
-          {/* Hand */}
-          <circle cx="442" cy="530" r="14" fill="#FFE066" stroke="#000" strokeWidth="4" />
-        </g>
-
-        {/* RIGHT ARM (Animated Typing) */}
-        <g style={{ animation: 'typingRight 0.8s linear infinite', animationPlayState: animState, transformOrigin: '530px 350px' }}>
-          <path d="M 525 330 Q 590 400 590 480 L 550 525" fill="none" stroke="#F8F4EC" strokeWidth="22" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M 525 330 Q 590 400 590 480 L 550 525" fill="none" stroke="#000" strokeWidth="28" strokeLinecap="round" strokeLinejoin="round" style={{ mixBlendMode: 'destination-over' as any }} />
-          {/* Hand */}
-          <circle cx="548" cy="527" r="14" fill="#FFE066" stroke="#000" strokeWidth="4" />
-        </g>
-
-        {/* WORKSTATION / MONITORS (Foreground) */}
-        {/* Keyboard */}
-        <rect x="420" y="520" width="140" height="25" rx="4" fill="#222" stroke="#000" strokeWidth="4" transform="skewX(-15)" />
-        <rect x="430" y="525" width="110" height="15" rx="2" fill="#111" transform="skewX(-15)" />
-        
-        {/* Cyan Glow reflecting off the desk from screens */}
-        <ellipse cx="485" cy="530" rx="80" ry="15" fill="#00E5FF" opacity="0.25" filter="blur(15px)" style={{ animation: 'screenFlicker 2s infinite', animationPlayState: animState }} />
-
-        {/* CENTER MASSIVE DISPLAY */}
-        <g>
-          {/* Stand */}
-          <rect x="360" y="480" width="20" height="60" fill="#333" stroke="#000" strokeWidth="4" />
-          <rect x="290" y="210" width="120" height="280" fill="url(#screenGradient)" stroke="#000" strokeWidth="6" rx="8" />
-          {/* Screen Content - Editor/Timeline */}
-          <g style={{ animation: 'screenFlicker 4s infinite', animationPlayState: animState }}>
-            <rect x="300" y="220" width="100" height="150" fill="#111" />
-            <rect x="300" y="380" width="100" height="100" fill="#111" />
-            {/* Fake UI */}
-            <rect x="310" y="230" width="40" height="8" fill="#FF4B6E" />
-            <rect x="310" y="250" width="80" height="4" fill="#FFF" opacity="0.5" />
-            <rect x="310" y="265" width="60" height="4" fill="#FFF" opacity="0.5" />
-            {/* AI Node circle */}
-            <circle cx="350" cy="310" r="30" fill="none" stroke="#00E5FF" strokeWidth="4" strokeDasharray="15 8" />
-            {/* Audio Waveforms */}
-            <path d="M 310 410 L 315 400 L 320 420 L 325 395 L 330 415 L 335 405 L 340 410" stroke="#FFE066" strokeWidth="2" fill="none" />
-          </g>
-        </g>
-
-        {/* RIGHT DISPLAY (Angled) */}
-        <g transform="translate(600, 230) rotate(10) scale(0.9)">
-          <rect x="-10" y="260" width="20" height="60" fill="#333" stroke="#000" strokeWidth="4" />
-          <rect x="-40" y="0" width="120" height="260" fill="url(#screenGradient)" stroke="#000" strokeWidth="6" rx="8" />
-          {/* Terminal / Code Lines */}
-          <g style={{ animation: 'screenFlicker 2.5s infinite', animationPlayState: animState }}>
-             <rect x="-30" y="10" width="100" height="240" fill="#050505" />
-             {/* Scrolling Code simulation */}
-             <g style={{ animation: 'dataFlow 5s linear infinite', animationPlayState: animState }}>
-               <rect x="-20" y="30" width="80" height="4" fill="#00E5FF" />
-               <rect x="-20" y="45" width="50" height="4" fill="#FFF" opacity="0.5" />
-               <rect x="-20" y="60" width="60" height="4" fill="#FFF" opacity="0.8" />
-               <rect x="-20" y="75" width="40" height="4" fill="#FFE066" />
-               
-               <rect x="-20" y="120" width="70" height="4" fill="#00E5FF" />
-               <rect x="-20" y="135" width="60" height="4" fill="#FFF" opacity="0.5" />
-               <rect x="-20" y="150" width="45" height="4" fill="#FFF" opacity="0.8" />
-               <rect x="-20" y="165" width="65" height="4" fill="#FFE066" />
-             </g>
-          </g>
-        </g>
-
-        {/* COFFEE MUG (Because, agency life) */}
-        <g transform="translate(730, 490)">
-          <path d="M 0 0 L 5 35 L 25 35 L 30 0 Z" fill="#F8F4EC" stroke="#000" strokeWidth="4" strokeLinejoin="round" />
-          <path d="M 30 10 C 40 10 40 25 28 25" fill="none" stroke="#000" strokeWidth="4" strokeLinecap="round" />
-          {/* Steam */}
-          <path d="M 10 -10 Q 5 -20 15 -30" fill="none" stroke="#FFF" strokeWidth="2" opacity="0.8" style={{ animation: 'dataFlow 3s infinite', animationPlayState: animState }} />
-          <path d="M 20 -5 Q 25 -15 15 -25" fill="none" stroke="#FFF" strokeWidth="2" opacity="0.8" style={{ animation: 'dataFlow 3.5s infinite', animationPlayState: animState, animationDelay: '1s' }} />
-        </g>
-
-      </svg>
-    </div>
-  );
-};
-
-/* ─── ABOUT SECTION (Bespoke Typography + Oversized SVG) ─── */
 const AboutSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView   = useInView(sectionRef, { once: false, margin: '-5%' });
+  const isInView   = useInView(sectionRef, { once: true, margin: '-15%' });
 
   return (
     <section
       id="about"
-      data-section="1"
-      data-bg="#1a0000"
+      data-section="4"
+      data-bg="#FFF3E0"
       ref={sectionRef}
-      className="py-20 sm:py-28 relative overflow-hidden flex items-center"
-      style={{ backgroundColor: '#1a0000', color: '#111111' }}
+      className="relative overflow-hidden"
+      style={{
+        backgroundColor: '#FFF3E0',
+        color: '#111',
+        minHeight: '80vh',
+      }}
     >
-      <div className="w-full mx-auto px-4 sm:px-8 lg:px-16 xl:px-24 relative z-10" style={{ maxWidth: '1800px' }}>
-        
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center lg:items-center min-h-[90vh]">
-          
-          {/* TEXT CONTENT LAYER (Left side, minimal & elegant) */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }} 
-            animate={isInView ? { opacity: 1, x: 0 } : {}} 
-            transition={{ duration: 0.8, ease: [0.16,1,0.3,1] }}
-            className="flex flex-col z-10"
-          >
-            {/* Headline */}
-            <h2 className="font-heading" style={{ fontSize: 'clamp(54px, 7vw, 100px)', lineHeight: 0.95, color: '#FFFFFF' }}>
-              Powered by<br />
-              <span style={{ color: '#CC0000', fontStyle: 'italic' }}>AI Agents.</span>
-            </h2>
+      <div className="relative z-10 w-full max-w-[1800px] mx-auto px-6 sm:px-12 lg:px-16 py-24 sm:py-32">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
-            {/* Main Paragraph */}
-            <p className="mt-8 text-white/80 max-w-xl font-body" style={{ fontSize: 'clamp(18px, 1.8vw, 22px)', lineHeight: 1.6 }}>
-              We don't just use AI to cut corners. We use it to build entirely new production workflows. From writing the first hook, to designing the visuals, to doing the final cut—our intelligent agents handle the heavy lifting so you get premium ads in a fraction of the time.
-            </p>
-
-            {/* Visual Pipeline Layout */}
-            <div className="mt-14 relative pl-[50px] space-y-8 max-w-xl">
-               {/* The continuous vertical line */}
-               <div className="absolute left-[19px] top-6 bottom-0 w-[2px] bg-gradient-to-b from-[#CC0000] via-[#CC0000]/40 to-transparent"></div>
-               
-               {/* Node 1 */}
-               <div className="relative group">
-                  <div className="absolute -left-[38px] top-6 w-4 h-4 rounded-full border-[2px] border-[#1a0000] bg-[#CC0000] shadow-[0_0_15px_#CC0000] z-10 transition-transform group-hover:scale-150"></div>
-                  <div className="bg-[#1f1111]/80 backdrop-blur-md border border-white/5 p-6 lg:p-8 rounded-[24px] hover:bg-[#2a1414] transition-colors shadow-2xl">
-                     <div className="text-[#CC0000] font-mono text-[11px] lg:text-[12px] tracking-[0.2em] mb-2 uppercase">Phase 01 // Ingestion</div>
-                     <h3 className="font-heading text-white text-[20px] lg:text-[22px] mb-2">Brand Intelligence</h3>
-                     <p className="text-white/60 font-body text-[14px] lg:text-[15px] leading-relaxed">
-                       We feed your brand guidelines, historical data, and aesthetic vectors into the orchestrator to establish baseline rules.
-                     </p>
-                  </div>
-               </div>
-
-               {/* Node 2 */}
-               <div className="relative group">
-                  <div className="absolute -left-[38px] top-6 w-4 h-4 rounded-full border-[2px] border-[#1a0000] bg-[#CC0000] shadow-[0_0_15px_#CC0000] z-10 transition-transform group-hover:scale-150"></div>
-                  <div className="bg-[#1f1111]/80 backdrop-blur-md border border-white/5 p-6 lg:p-8 rounded-[24px] hover:bg-[#2a1414] transition-colors shadow-2xl">
-                     <div className="text-[#CC0000] font-mono text-[11px] lg:text-[12px] tracking-[0.2em] mb-2 uppercase">Phase 02 // Synthesis</div>
-                     <h3 className="font-heading text-white text-[20px] lg:text-[22px] mb-2">Autonomous Creation</h3>
-                     <p className="text-white/60 font-body text-[14px] lg:text-[15px] leading-relaxed">
-                       Agents architect scripts, design visual assets, and render multi-channel variations at blistering speed without human bottlenecks.
-                     </p>
-                  </div>
-               </div>
-
-               {/* Node 3 */}
-               <div className="relative group">
-                  <div className="absolute -left-[38px] top-6 w-4 h-4 rounded-full border-[2px] border-[#1a0000] bg-[#CC0000] shadow-[0_0_15px_#CC0000] z-10 transition-transform group-hover:scale-150"></div>
-                  <div className="bg-[#1f1111]/80 backdrop-blur-md border border-white/5 p-6 lg:p-8 rounded-[24px] hover:bg-[#2a1414] transition-colors shadow-2xl">
-                     <div className="text-[#CC0000] font-mono text-[11px] lg:text-[12px] tracking-[0.2em] mb-2 uppercase">Phase 03 // Optimization</div>
-                     <h3 className="font-heading text-white text-[20px] lg:text-[22px] mb-2">Predictive Scaling</h3>
-                     <p className="text-white/60 font-body text-[14px] lg:text-[15px] leading-relaxed">
-                       We simulate A/B tests on variations to feed the algorithm your highest ROI angles before a single dollar is spent on deployment.
-                     </p>
-                  </div>
-               </div>
-
-            </div>
-          </motion.div>
-
-          {/* SVG ANIMATION LAYER (Right side) */}
+          {/* LEFT: SVG character handling multiple screens */}
           <motion.div
-            className="w-full relative z-0 flex flex-col items-center lg:items-end mt-16 lg:mt-0"
-            initial={{ opacity: 0, scale: 0.95, x: 30 }}
-            animate={isInView ? { opacity: 1, scale: 1, x: 0 } : {}}
-            transition={{ duration: 1, ease: [0.16,1,0.3,1], delay: 0.2 }}
+            className="flex justify-center lg:justify-start order-2 lg:order-1"
+            initial={{ opacity: 0, x: -40 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.9, ease: [0.22,1,0.36,1] }}
           >
-             {/* Massive container scaling up the SVG visually */}
-             <div className="w-[115%] sm:w-[125%] lg:w-[140%] xl:w-[150%] max-w-[1200px] -mr-[10%] lg:-mr-[25%] pointer-events-none">
-               <CreatorStationSVG isAnimating={isInView} />
-             </div>
+            <MultiScreenMaestroSVG />
           </motion.div>
 
+          {/* RIGHT: Copy */}
+          <motion.div
+            className="flex flex-col order-1 lg:order-2"
+            initial="hidden"
+            animate={isInView ? 'show' : 'hidden'}
+            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } } }}
+          >
+            <motion.span
+              className="font-mono text-[10px] tracking-[0.25em] uppercase mb-5 block"
+              style={{ color: '#F48B29' }}
+              variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }}
+            >
+              ■ About Me
+            </motion.span>
+
+            <motion.h2
+              className="font-heading tracking-tight"
+              style={{ fontSize: 'clamp(2.8rem, 7vw, 90px)', lineHeight: 0.90, color: '#111' }}
+              variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22,1,0.36,1] } } }}
+            >
+              EVERY PIXEL.<br />EVERY FRAME.<br />
+              <span style={{ color: '#F48B29' }}>INTENTIONAL.</span>
+            </motion.h2>
+
+            <motion.p
+              className="font-body text-[16px] sm:text-[18px] leading-[1.7] max-w-lg mt-8"
+              style={{ color: 'rgba(17,17,17,0.72)' }}
+              variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
+            >
+              I am Kshitij. I have two years of intensive experience in generative AI, producing high-quality generative ads, static visuals, and immersive cinematic films.
+            </motion.p>
+
+            <motion.p
+              className="font-body text-[16px] sm:text-[18px] leading-[1.7] max-w-lg mt-4"
+              style={{ color: 'rgba(17,17,17,0.65)' }}
+              variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
+            >
+              I have worked on a diverse range of projects, leveraging the best AI products and models to continuously execute at the highest quality. No shortcuts. Just uncompromising intent meeting flawless execution.
+            </motion.p>
+
+            {/* Stat pills removed as requested */}
+          </motion.div>
         </div>
       </div>
     </section>
