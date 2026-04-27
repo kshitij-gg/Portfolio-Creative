@@ -137,47 +137,23 @@ const MarqueeRow = ({
 };
 
 // ── Media Card (still poster → plays on hover) ──────────────────────────────
-// After metadata loads we seek to 0.5 s so the card shows a real frame,
-// not the black first-frame. On hover: rewind to 0 and play. On leave: pause
-// and return to the poster frame so the card looks like a still image again.
+// ── Media Card (Continuous Autoplay) ──────────────────────────────────────────
+// simplified to act like continuously looping GIFs as requested
 const MediaCard = memo(({ url }: { url: string }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const isVideo  = url.includes('.webm') || url.includes('.mp4') || url.includes('.gif');
-
-  // Seek to a non-black frame so the card isn't empty while not hovered
-  const handleMeta = useCallback(() => {
-    const v = videoRef.current;
-    if (v) v.currentTime = 0.5;
-  }, []);
-
-  const handleMouseEnter = useCallback(() => {
-    const v = videoRef.current;
-    if (!isVideo || !v) return;
-    v.currentTime = 0;
-    v.play().catch(() => {});
-  }, [isVideo]);
-
-  const handleMouseLeave = useCallback(() => {
-    const v = videoRef.current;
-    if (!isVideo || !v) return;
-    v.pause();
-    v.currentTime = 0.5; // return to poster frame
-  }, [isVideo]);
 
   return (
     <div
       className="group relative overflow-hidden flex-shrink-0 bg-neutral-900"
-      style={{ height: 'clamp(380px, 44vh, 600px)', aspectRatio: '3/4', borderRadius: 10, marginRight: 14, cursor: 'pointer' }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      style={{ height: 'clamp(380px, 44vh, 600px)', aspectRatio: '3/4', borderRadius: 10, marginRight: 14 }}
     >
       {isVideo ? (
         <video
-          ref={videoRef}
           src={url}
-          preload="metadata"
-          loop muted playsInline
-          onLoadedMetadata={handleMeta}
+          autoPlay
+          loop 
+          muted 
+          playsInline
           style={{
             position: 'absolute', inset: 0, width: '100%', height: '100%',
             objectFit: 'cover',
@@ -194,8 +170,7 @@ const MediaCard = memo(({ url }: { url: string }) => {
           className="group-hover:scale-[1.04]"
         />
       )}
-      {/* Dark overlay fades lighter on hover — polished editorial feel */}
-      <div className="absolute inset-0 bg-black/25 group-hover:bg-black/5 transition-colors duration-300 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300 pointer-events-none" />
     </div>
   );
 });
@@ -215,12 +190,11 @@ const MarqueeVideoRow = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   
-  // Create 6 identical copies of the sequence.
-  // Because the animation shifts exactly -50% (3 sequences), it will perfectly 
-  // snap back to 0 seamlessly, while keeping the container insanely wide to prevent gaps.
-  const repeated = [...urls, ...urls, ...urls, ...urls, ...urls, ...urls];
+  // 4 copies is exactly enough. Much lighter for browser memory.
+  const repeated = [...urls, ...urls, ...urls, ...urls];
   
-  const animName = direction === 'left' ? 'marq-left' : 'marq-right';
+  // Since we have 4 copies, shifting exactly 25% translates perfectly 1 copy width.
+  const animName = 'marq-left-25';
   const shouldPause = paused || isHovered;
 
   return (
@@ -250,8 +224,9 @@ const VIDEO_URLS = Object.values(videoModules).slice(0, 5);
 
 // Shared keyframe stylesheet — injected once globally
 const MARQUEE_STYLES = `
-  @keyframes marq-left  { from { transform: translate3d(0,0,0);    } to { transform: translate3d(-50%,0,0); } }
-  @keyframes marq-right { from { transform: translate3d(-50%,0,0); } to { transform: translate3d(0,0,0);    } }
+  @keyframes marq-left     { from { transform: translate3d(0,0,0);    } to { transform: translate3d(-50%,0,0); } }
+  @keyframes marq-left-25  { from { transform: translate3d(0,0,0);    } to { transform: translate3d(-25%,0,0); } }
+  @keyframes marq-right    { from { transform: translate3d(-50%,0,0); } to { transform: translate3d(0,0,0);    } }
 `;
 
 // ── Main Section ──────────────────────────────────────────────────────────────
