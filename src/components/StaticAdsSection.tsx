@@ -214,7 +214,12 @@ const MarqueeVideoRow = ({
   paused?: boolean;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const doubled = [...urls, ...urls];
+  
+  // Create 6 identical copies of the sequence.
+  // Because the animation shifts exactly -50% (3 sequences), it will perfectly 
+  // snap back to 0 seamlessly, while keeping the container insanely wide to prevent gaps.
+  const repeated = [...urls, ...urls, ...urls, ...urls, ...urls, ...urls];
+  
   const animName = direction === 'left' ? 'marq-left' : 'marq-right';
   const shouldPause = paused || isHovered;
 
@@ -231,15 +236,16 @@ const MarqueeVideoRow = ({
         animationPlayState: shouldPause ? 'paused' : 'running',
         willChange:         'transform',
       }}>
-        {doubled.map((url, i) => <MediaCard key={i} url={url} />)}
+        {repeated.map((url, i) => <MediaCard key={i} url={url} />)}
       </div>
     </div>
   );
 };
 
-// Lazy-import video URLs — NOT eager. Only fetched when this module loads.
+// Lazy-import video URLs — early parsed
 const videoModules = import.meta.glob('./static_ads_middle_section/*.{webm,mp4,gif}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-// Only use first 4 videos (was 8 → 16 doubled = insane). 4 doubled = 8 — manageable.
+
+// Use EXACTLY 5 videos as requested.
 const VIDEO_URLS = Object.values(videoModules).slice(0, 5);
 
 // Shared keyframe stylesheet — injected once globally
