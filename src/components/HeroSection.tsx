@@ -2,6 +2,7 @@ import { useContext, useRef, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { IntroContext } from '../contexts/IntroContext';
 import Navbar from './Navbar';
+import heroVideoUrl from '../assets/hero-video.mp4';
 
 /**
  * HERO SECTION
@@ -47,7 +48,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         <video
           ref={videoRef}
-          src="/hero-video/Background Maaa(2).mp4"
+          src={heroVideoUrl}
           autoPlay
           muted
           loop
