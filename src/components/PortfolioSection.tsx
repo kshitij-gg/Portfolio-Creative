@@ -3,7 +3,7 @@ import { motion, useInView } from 'framer-motion';
 
 const visualProjects = [
   { id: 1, url: 'https://player.vimeo.com/video/1165995105?h=15e21dc6dc', ratio: '16/9' },
-  { id: 2, url: 'https://player.vimeo.com/video/1153960232?h=0e89f3bd41', ratio: '16/9' },
+  { id: 2, url: 'https://player.vimeo.com/video/1188442191?h=22aa58b397', ratio: '16/9' },
   { id: 3, url: 'https://player.vimeo.com/video/1186915669?h=ec2b467d83', ratio: '16/9' },
   { id: 4, url: 'https://player.vimeo.com/video/1152867925?h=c2a5b7b929', ratio: '16/9' },
   { id: 5, url: 'https://player.vimeo.com/video/1152866745?h=94a4f3808f', ratio: '426/190' },
